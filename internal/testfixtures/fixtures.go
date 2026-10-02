@@ -19,7 +19,6 @@ import (
 	"golang.org/x/image/tiff"
 )
 
-// solid builds a small gradient image so encoders produce non-trivial output.
 func solid(w, h int) image.Image {
 	img := image.NewRGBA(image.Rect(0, 0, w, h))
 	for y := 0; y < h; y++ {
@@ -30,7 +29,6 @@ func solid(w, h int) image.Image {
 	return img
 }
 
-// encodeImage renders a w×h gradient through enc and returns the bytes.
 func encodeImage(w, h int, enc func(io.Writer, image.Image) error) []byte {
 	var buf bytes.Buffer
 	_ = enc(&buf, solid(w, h))
@@ -117,10 +115,8 @@ func escapePDF(s string) string {
 	return strings.ReplaceAll(s, ")", "\\)")
 }
 
-// buildPDF assembles a minimal but structurally valid PDF with a correct xref
-// table from the given per-page content streams.
 func buildPDF(pageContents []string) []byte {
-	objs := make([]string, 3) // reserve 1=catalog, 2=pages, 3=font
+	objs := make([]string, 3)
 	add := func(body string) int {
 		objs = append(objs, body)
 		return len(objs)

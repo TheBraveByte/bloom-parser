@@ -25,7 +25,7 @@ MODEL_FAST = "meta/llama-3.2-11b-vision-instruct"
 MODEL_SLOW = "meta/llama-3.2-90b-vision-instruct"
 WORKERS = 4
 TIMEOUT = 60
-CHAR_PX = 8  # lower bound on cell width per character at scale=2
+CHAR_PX = 8
 
 _SENTENCE = re.compile(
     r'(?i)(?:the (?:text|image|cell|number|value)[^."]*?'
@@ -48,14 +48,14 @@ def load_key(env_var="NVIDIA_API_KEY"):
 
 def normalize_reply(content, numeric=False):
     """Turn a chatty model reply into a bare cell value; '' means empty."""
-    if isinstance(content, list):  # some NIM models return content parts
+    if isinstance(content, list):
         content = "".join(p.get("text", "") for p in content)
     s = content.strip().splitlines()[0].strip()
-    m = re.search(r'"([^"]*)"', s)  # unwrap: the text is "X"
+    m = re.search(r'"([^"]*)"', s)
     if m:
         s = m.group(1)
     else:
-        m = _SENTENCE.match(s)  # unwrap: the image shows X
+        m = _SENTENCE.match(s)
         if m:
             s = m.group(1)
     s = re.sub(r'(?i)^the (?:number|text|value|image)\s+(?:is\s+)?', '', s)
@@ -119,15 +119,15 @@ def suspect(new, old, old_conf, crop_w, numeric_col):
     conf = float(old_conf or 0)
     if not new:
         return bool(re.search(r"[A-Za-z0-9]", old)) and conf >= 50
-    if len(new) * CHAR_PX > crop_w:  # can't physically fit in the cell
+    if len(new) * CHAR_PX > crop_w:
         return True
     if numeric_col and not NUMERIC.match(new):
         return True
     if len(old) <= 3 and len(new) > len(old) + 2:
-        return True  # long text read into a tiny fragment
+        return True
     if old and conf >= 50 and difflib.SequenceMatcher(
             None, old.lower(), new.lower()).ratio() < 0.3:
-        return True  # overwrites a decent OCR read with something unrelated
+        return True
     return False
 
 
@@ -140,7 +140,6 @@ def run(out_dir):
     data = tables[1:]
     idx = {(r[0], r[1]): r for r in data}
 
-    # column numeric-ness per sheet, from the pre-LLM table
     numeric = {}
     for r in data:
         for i, v in enumerate(r[3:]):
@@ -174,7 +173,7 @@ def run(out_dir):
                 row = idx.get((rec["file"], rec["row"]))
                 col = int(rec["col"])
                 if row and new != rec["text"]:
-                    if len(row) <= 2 + col:  # ragged rows: extend as needed
+                    if len(row) <= 2 + col:
                         row.extend([""] * (3 + col - len(row)))
                     lw.writerow([rec["file"], rec["row"], col,
                                  rec["text"], rec["conf"], new, model])

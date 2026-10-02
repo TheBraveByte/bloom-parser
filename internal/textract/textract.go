@@ -84,7 +84,6 @@ type Result struct {
 
 var unsafeName = regexp.MustCompile(`[^A-Za-z0-9._-]+`)
 
-// safeName reduces an upload name to a plain basename for provenance.
 func safeName(name string) string {
 	name = unsafeName.ReplaceAllString(filepath.Base(name), "_")
 	if name == "" || name == "." {
@@ -149,7 +148,6 @@ func (r *Runner) RunAll(ctx context.Context, files []File, opts Options) *Result
 	return res
 }
 
-// runOne runs extract → [refine] → normalize for a single file in a temp dir.
 func (r *Runner) runOne(ctx context.Context, f File, opts Options) (rows []string, facts, flagged int, err error) {
 	tmp, err := os.MkdirTemp("", "tableextract-")
 	if err != nil {
@@ -200,7 +198,6 @@ func (r *Runner) runOne(ctx context.Context, f File, opts Options) (rows []strin
 	return rows, facts, flagged, nil
 }
 
-// joinCSV re-encodes a parsed record, quoting fields that need it.
 func joinCSV(rec []string) string {
 	var buf bytes.Buffer
 	w := gocsv.NewWriter(&buf)

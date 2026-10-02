@@ -7,19 +7,19 @@ import (
 
 	"github.com/joho/godotenv"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/powerbi"
+	"github.com/TheBraveByte/bloom-parser/internal/powerbi"
 )
 
 type Config struct {
 	Port         int
 	HTTPPort     int
-	LogFormat    string // "json" | "text"
+	LogFormat    string
 	LogLevel     slog.Level
 	OTelEnabled  bool
-	MaxBytes     int    // request-level size cap
-	MaxPages     int    // default per-document page cap
-	OCRLanguages string // OCR language hint (used by the tesseract build)
-	OCRDefault   bool   // attempt OCR when a request omits options
+	MaxBytes     int
+	MaxPages     int
+	OCRLanguages string
+	OCRDefault   bool
 	PowerBI      powerbi.Config
 }
 

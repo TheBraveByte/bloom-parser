@@ -11,12 +11,12 @@ import (
 	"google.golang.org/grpc/status"
 	"google.golang.org/grpc/test/bufconn"
 
-	pb "github.com/bushadigitallimited/bloom-parser/gen/go/document_parser/v1"
-	"github.com/bushadigitallimited/bloom-parser/internal/ingest"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
-	"github.com/bushadigitallimited/bloom-parser/internal/powerbi"
-	"github.com/bushadigitallimited/bloom-parser/internal/testfixtures"
+	pb "github.com/TheBraveByte/bloom-parser/gen/go/document_parser/v1"
+	"github.com/TheBraveByte/bloom-parser/internal/ingest"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/powerbi"
+	"github.com/TheBraveByte/bloom-parser/internal/testfixtures"
 )
 
 func dial(t *testing.T, pub *powerbi.Publisher) pb.DocumentParserServiceClient {
@@ -142,8 +142,6 @@ func TestExtractDocumentScannedPDFPageError(t *testing.T) {
 }
 
 func TestExtractDocumentDefaultOCR(t *testing.T) {
-	// With default OCR on and options omitted, an image page attempts OCR and,
-	// with the disabled engine, reports OCR_UNAVAILABLE.
 	c := dialServer(t, NewServer(parser.NewService(), ingest.New(ocr.Disabled(), ingest.DefaultLimits), nil).WithDefaultOCR(true))
 	resp, err := c.ExtractDocument(context.Background(), &pb.ExtractDocumentRequest{
 		Document: &pb.DocumentInput{Content: testfixtures.PNG(20, 20), Name: "x.png"},
@@ -225,7 +223,7 @@ func TestExportXLSXInlineSource(t *testing.T) {
 }
 
 func TestErrorCodes(t *testing.T) {
-	c := dial(t, nil) // no publisher configured
+	c := dial(t, nil)
 	ctx := context.Background()
 
 	cases := []struct {

@@ -10,10 +10,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
-// fakePowerBI is an in-memory Power BI + Entra stub.
 type fakePowerBI struct {
 	t *testing.T
 	*httptest.Server

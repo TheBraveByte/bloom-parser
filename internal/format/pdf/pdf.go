@@ -10,10 +10,10 @@ import (
 
 	lpdf "github.com/ledongthuc/pdf"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 // Adapter extracts native text and detects scanned pages.
@@ -62,7 +62,6 @@ func (a *Adapter) extractPage(r *lpdf.Reader, n int) document.Page {
 		}
 	}
 
-	// No text layer: a scanned page needing rasterized pixels for OCR.
 	page := document.Page{Number: n, Kind: document.PageImage, Source: pageLabel(n), Confidence: document.ConfidenceUnknown}
 	if !a.engine.Available() {
 		page.Err = &document.PageError{Code: document.ErrOCRUnavailable, Message: "scanned page has no text layer and no OCR engine is configured"}
@@ -72,7 +71,6 @@ func (a *Adapter) extractPage(r *lpdf.Reader, n int) document.Page {
 	return page
 }
 
-// plainText extracts one page's text, recovering from reader panics.
 func plainText(r *lpdf.Reader, n int) (text string, err error) {
 	defer func() {
 		if rec := recover(); rec != nil {

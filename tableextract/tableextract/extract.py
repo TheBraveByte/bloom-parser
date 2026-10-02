@@ -49,8 +49,6 @@ def extract(path, crops_dir=None):
     cells = ocr.bin_words(ocr.ocr_words(gray), row_ys, col_xs)
     numeric = ocr.numeric_columns(cells, ncols)
 
-    # Second pass: re-OCR low-confidence cells and empty cells in populated
-    # rows (page-level OCR may have missed faint or small text).
     for r in sorted(cells):
         if not any(not ocr.is_noise(t) for t, _ in cells[r].values()):
             continue
@@ -97,7 +95,7 @@ def run(out_dir, paths):
          open(os.path.join(out_dir, "crops.csv"), "w", newline="") as cf:
         pw, tw, cw = csv.writer(pf), csv.writer(tf), csv.writer(cf)
         pw.writerow(["file", "mode", "rows", "cells", "flagged_cells", "error"])
-        tw.writerow(["file", "row", "flag", "c1..."])  # ragged rows
+        tw.writerow(["file", "row", "flag", "c1..."])
         cw.writerow(["file", "row", "col", "text", "conf", "label", "crop"])
         for i, path in enumerate(paths, 1):
             name = os.path.basename(path)

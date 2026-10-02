@@ -2,7 +2,7 @@
 // into. Tabular data reuses parser.ParsedDocument.
 package document
 
-import "github.com/bushadigitallimited/bloom-parser/internal/parser"
+import "github.com/TheBraveByte/bloom-parser/internal/parser"
 
 // Format identifies a supported source format.
 type Format int
@@ -65,9 +65,9 @@ func (f Format) IsImage() bool {
 type PageKind int
 
 const (
-	PageText  PageKind = iota // native text
-	PageImage                 // raster image, OCR'd when enabled
-	PageSheet                 // spreadsheet sheet
+	PageText PageKind = iota
+	PageImage
+	PageSheet
 )
 
 func (k PageKind) String() string {
@@ -93,14 +93,14 @@ type Document struct {
 
 // Page is one unit of a document. A failed page carries Err; siblings survive.
 type Page struct {
-	Number     int // 1-based
+	Number     int
 	Kind       PageKind
-	Source     string // label: "page-3", a sheet name, an image name
+	Source     string
 	Text       string
 	Tables     []*parser.ParsedDocument
 	Images     []ImageInfo
 	Fields     []Field
-	Confidence float64 // 0..1, or ConfidenceUnknown
+	Confidence float64
 	Warnings   []parser.Warning
 	Err        *PageError
 }

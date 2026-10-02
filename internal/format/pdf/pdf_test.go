@@ -6,11 +6,11 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
-	"github.com/bushadigitallimited/bloom-parser/internal/testfixtures"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/testfixtures"
 )
 
 func adapt(t *testing.T, a *Adapter, content []byte, opts format.Options) []document.Page {
@@ -89,8 +89,6 @@ func TestMalformedPDF(t *testing.T) {
 	}
 }
 
-// availableEngine reports itself available but is never actually invoked for
-// scanned PDF pages (no rasterizer), so Recognize is unused here.
 type availableEngine struct{ ocr.Engine }
 
 func (availableEngine) Available() bool { return true }

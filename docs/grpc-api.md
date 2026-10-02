@@ -53,7 +53,7 @@ errors or logs.
 
 `buf generate` writes `gen/openapiv2/bloom-parser.swagger.json` from the proto
 (endpoints, request/response schemas, enums). Serve or import it in any
-OpenAPI UI. Regenerate with `make proto`.
+OpenAPI UI. Regenerate with `buf generate`.
 
 ## Calling it
 

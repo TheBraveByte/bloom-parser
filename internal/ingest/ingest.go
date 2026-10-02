@@ -6,19 +6,19 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/format/image"
-	"github.com/bushadigitallimited/bloom-parser/internal/format/pdf"
-	"github.com/bushadigitallimited/bloom-parser/internal/format/text"
-	"github.com/bushadigitallimited/bloom-parser/internal/format/xlsx"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/format/image"
+	"github.com/TheBraveByte/bloom-parser/internal/format/pdf"
+	"github.com/TheBraveByte/bloom-parser/internal/format/text"
+	"github.com/TheBraveByte/bloom-parser/internal/format/xlsx"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
 )
 
 // Limits bound resource use at the request boundary.
 type Limits struct {
-	MaxBytes int // reject inputs larger than this; 0 means unlimited
-	MaxPages int // default per-document page cap; 0 means unlimited
+	MaxBytes int
+	MaxPages int
 }
 
 // DefaultLimits are conservative defaults applied when none are configured.
@@ -28,7 +28,7 @@ var DefaultLimits = Limits{MaxBytes: 32 << 20, MaxPages: 200}
 type Request struct {
 	Name    string
 	Content []byte
-	Format  document.Format // FormatUnknown triggers detection
+	Format  document.Format
 	Options format.Options
 }
 

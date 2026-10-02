@@ -9,7 +9,7 @@ import (
 
 	"github.com/xuri/excelize/v2"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 func testDoc() *parser.ParsedDocument {
@@ -103,7 +103,6 @@ func TestXLSXExport(t *testing.T) {
 	if get("E2") != "TRUE" {
 		t.Errorf("E2 = %q", get("E2"))
 	}
-	// Datetime cell stored as a serial number with date formatting.
 	if get("D2") == "" || get("D2") == "2024-03-01T10:30:00Z" {
 		t.Errorf("D2 = %q (expected excel serial)", get("D2"))
 	}

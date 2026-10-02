@@ -9,9 +9,9 @@ import (
 
 	"github.com/xuri/excelize/v2"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 // Adapter reads workbooks with excelize.
@@ -57,7 +57,6 @@ func sheetPage(f *excelize.File, name string, number int) document.Page {
 		return page
 	}
 
-	// Widen the header to the widest row (excelize trims trailing empty cells).
 	ncols := 0
 	for _, r := range rows {
 		if len(r) > ncols {

@@ -15,16 +15,16 @@ import (
 	gcodes "google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	pb "github.com/bushadigitallimited/bloom-parser/gen/go/document_parser/v1"
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/export"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/ingest"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
-	"github.com/bushadigitallimited/bloom-parser/internal/powerbi"
+	pb "github.com/TheBraveByte/bloom-parser/gen/go/document_parser/v1"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/export"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/ingest"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/powerbi"
 )
 
-var tracer = otel.Tracer("github.com/bushadigitallimited/bloom-parser")
+var tracer = otel.Tracer("github.com/TheBraveByte/bloom-parser")
 
 // Server implements DocumentParserServiceServer as thin handlers over the
 // parser, exporters and Power BI publisher.
@@ -61,7 +61,6 @@ func (s *Server) ExtractDocument(ctx context.Context, req *pb.ExtractDocumentReq
 		return nil, fail(span, err)
 	}
 
-	// Omitted options inherit the server default; present options win.
 	opts := req.GetOptions()
 	useOCR := s.defaultOCR
 	if opts != nil {
@@ -168,7 +167,6 @@ func (s *Server) PublishToPowerBI(ctx context.Context, req *pb.PublishToPowerBIR
 	}, nil
 }
 
-// parse validates a DocumentInput and runs the parser.
 func (s *Server) parse(ctx context.Context, in *pb.DocumentInput) (*parser.ParsedDocument, error) {
 	if in == nil || len(in.GetContent()) == 0 {
 		return nil, parser.ErrEmptyInput
@@ -180,7 +178,6 @@ func (s *Server) parse(ctx context.Context, in *pb.DocumentInput) (*parser.Parse
 	return s.parser.Parse(ctx, parser.Input{Name: in.GetName(), Content: in.GetContent()}, f)
 }
 
-// resolve turns a oneof DataSource into a domain document.
 func (s *Server) resolve(ctx context.Context, src *pb.DataSource) (*parser.ParsedDocument, error) {
 	if src == nil {
 		return nil, parser.ErrEmptyInput
@@ -195,7 +192,6 @@ func (s *Server) resolve(ctx context.Context, src *pb.DataSource) (*parser.Parse
 	}
 }
 
-// export resolves the source and runs one exporter.
 func (s *Server) export(ctx context.Context, src *pb.DataSource, e export.Exporter) (*pb.ExportedFile, error) {
 	doc, err := s.resolve(ctx, src)
 	if err != nil {
@@ -221,7 +217,6 @@ func exportFilename(name, ext string) string {
 	return base + ext
 }
 
-// fail records the error on the span and maps it to a gRPC status.
 func fail(span trace.Span, err error) error {
 	span.RecordError(err)
 	span.SetStatus(codes.Error, err.Error())

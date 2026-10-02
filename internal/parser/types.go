@@ -32,7 +32,7 @@ func (f Format) String() string {
 type ColumnType int
 
 const (
-	TypeNone ColumnType = iota // null/unset, never a final column type
+	TypeNone ColumnType = iota
 	TypeString
 	TypeInt
 	TypeFloat

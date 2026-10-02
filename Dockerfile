@@ -1,4 +1,3 @@
-# ---------- Go build ----------
 FROM golang:1.26-bookworm AS gobuild
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libtesseract-dev libleptonica-dev tesseract-ocr pkg-config \
@@ -7,17 +6,14 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
-# tesseract tag needs cgo against the libs above; drop the tag for a cgo-free build
 RUN CGO_ENABLED=1 go build -tags tesseract -o /out/server ./cmd/server \
     && CGO_ENABLED=0 go build -o /out/ocrtest ./cmd/ocrtest
 
-# ---------- Python tools ----------
 FROM python:3.12-slim AS pybuild
 WORKDIR /app
 COPY tableextract/ ./tableextract/
 RUN pip install --no-cache-dir ./tableextract
 
-# ---------- Runtime ----------
 FROM python:3.12-slim
 RUN apt-get update && apt-get install -y --no-install-recommends \
     tesseract-ocr libtesseract5 liblept5 libgl1 libglib2.0-0 \

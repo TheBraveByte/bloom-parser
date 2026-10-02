@@ -21,15 +21,15 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/grpc/reflection"
 
-	pb "github.com/bushadigitallimited/bloom-parser/gen/go/document_parser/v1"
-	"github.com/bushadigitallimited/bloom-parser/internal/config"
-	"github.com/bushadigitallimited/bloom-parser/internal/ingest"
-	"github.com/bushadigitallimited/bloom-parser/internal/observability"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
-	"github.com/bushadigitallimited/bloom-parser/internal/powerbi"
-	"github.com/bushadigitallimited/bloom-parser/internal/service"
-	"github.com/bushadigitallimited/bloom-parser/internal/textract"
+	pb "github.com/TheBraveByte/bloom-parser/gen/go/document_parser/v1"
+	"github.com/TheBraveByte/bloom-parser/internal/config"
+	"github.com/TheBraveByte/bloom-parser/internal/ingest"
+	"github.com/TheBraveByte/bloom-parser/internal/observability"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/powerbi"
+	"github.com/TheBraveByte/bloom-parser/internal/service"
+	"github.com/TheBraveByte/bloom-parser/internal/textract"
 )
 
 //go:embed web/index.html
@@ -108,7 +108,6 @@ func run() error {
 	}
 }
 
-// newGateway dials the gRPC server and returns the REST proxy.
 func newGateway(ctx context.Context, grpcPort int) (http.Handler, error) {
 	mux := runtime.NewServeMux()
 	conn, err := grpc.NewClient(
@@ -124,8 +123,6 @@ func newGateway(ctx context.Context, grpcPort int) (http.Handler, error) {
 	return mux, nil
 }
 
-// rootHandler serves the test console at "/", the REST gateway under /v1/,
-// and the OpenCV table-extraction pipeline at /v1/table-extract.
 func rootHandler(gateway http.Handler, tr *textract.Runner, maxBytes int64) http.Handler {
 	mux := http.NewServeMux()
 	mux.Handle("/v1/", gateway)
@@ -141,12 +138,8 @@ func rootHandler(gateway http.Handler, tr *textract.Runner, maxBytes int64) http
 	return mux
 }
 
-// maxTableFiles bounds how many files one request may carry.
 const maxTableFiles = 64
 
-// tableExtractHandler accepts a multipart upload (one or more "file" parts,
-// optional bool "refine"), runs the tableextract pipeline on the files
-// concurrently and returns the merged normalized CSV plus per-file stats.
 func tableExtractHandler(tr *textract.Runner, maxBytes int64) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		r.Body = http.MaxBytesReader(w, r.Body, maxBytes)

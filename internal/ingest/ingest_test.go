@@ -6,10 +6,10 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
-	"github.com/bushadigitallimited/bloom-parser/internal/testfixtures"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/testfixtures"
 )
 
 func newSvc() *Service { return New(ocr.Disabled(), DefaultLimits) }
@@ -78,8 +78,6 @@ func TestPipelineXLSXMultiSheet(t *testing.T) {
 }
 
 func TestPipelinePDFPageFailureIsolated(t *testing.T) {
-	// A scanned page fails OCR but the document and its page survive with a
-	// structured per-page error identifying exactly which page failed.
 	doc := ingest(t, Request{Content: testfixtures.ScannedPDF()})
 	if len(doc.Pages) != 1 {
 		t.Fatalf("pages = %d", len(doc.Pages))
@@ -105,7 +103,6 @@ func TestValidateTooLarge(t *testing.T) {
 }
 
 func TestExplicitFormatOverridesDetection(t *testing.T) {
-	// Content is valid CSV; forcing JSON must fail rather than silently detect.
 	_, err := newSvc().Ingest(context.Background(), Request{Content: []byte("a,b\n1,2"), Format: document.FormatJSON})
 	if !errors.Is(err, parser.ErrNotParseable) {
 		t.Errorf("err = %v, want ErrNotParseable", err)

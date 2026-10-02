@@ -7,12 +7,10 @@ import numpy as np
 import pytesseract
 from pytesseract import Output
 
-CONF_RETRY = 65  # re-OCR cells below this mean word confidence
-CONF_FLAG = 70   # still flag cells below this after re-OCR
+CONF_RETRY = 65
+CONF_FLAG = 70
 DIGITS_CFG = "-c tessedit_char_whitelist=0123456789,.-()"
 
-# Border glyphs tesseract reads from table rules. Parens are stripped only when
-# touching a digit so "(Net)" in labels survives.
 _EDGE = r'[\[\]{}|/\\_`~\'"“”‘’]'
 _L_PAREN = re.compile(r'^\((?=[\d.,])')
 _R_PAREN = re.compile(r'(?<=[\d.,])\)$')

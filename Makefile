@@ -1,7 +1,11 @@
 PY ?= .venv-ocr/bin/python
 PIP ?= .venv-ocr/bin/pip
 
-.PHONY: build test check fmt vet lint pytest docker clean
+.PHONY: help build test check fmt vet lint pytest docker clean extract refine normalize serve
+
+help: ## Show this help
+	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
+		awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
 
 build: ## Build the Go server (default, cgo-free)
 	go build ./...
@@ -42,5 +46,5 @@ serve: ## Run the server with /v1/table-extract wired to the venv
 	go build -o bin/server ./cmd/server
 	TABLEEXTRACT_PYTHON=$(abspath $(PY)) ./bin/server
 
-clean:
+clean: ## Remove build artifacts, venv and output dirs
 	rm -rf bin out .venv-ocr tableextract/*.egg-info tableextract/**/__pycache__

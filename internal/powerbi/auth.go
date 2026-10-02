@@ -15,8 +15,6 @@ const defaultAuthURL = "https://login.microsoftonline.com"
 
 const powerBIScope = "https://analysis.windows.net/powerbi/api/.default"
 
-// tokenSource fetches and caches an Entra access token via the OAuth2
-// client-credentials flow.
 type tokenSource struct {
 	cfg    Config
 	client *http.Client

@@ -62,7 +62,6 @@ def normalize_value(raw):
     if not re.fullmatch(r"[\d,.]+", s):
         return ""
     if "." in s and "," in s:
-        # rightmost separator is decimal only if it precedes 1-2 digits
         if s.rsplit(".", 1)[-1].isdigit() and len(s.rsplit(".", 1)[-1]) <= 2 \
                 and s.rindex(".") > s.rindex(","):
             s = s.replace(",", "")
@@ -91,7 +90,6 @@ def parse_periods(cell):
         if not p:
             return out
         out.append(p)
-        # drop the matched span so the next period can be found
         for rx in (_DMY, _MDY, _MY, _YEAR):
             m = rx.search(rest)
             if m:
@@ -145,8 +143,6 @@ def facts_for_sheet(file, rows):
     hdr, periods = detect_header(cells)
     val_cols = numeric_value_columns(rows, hdr)
     groups = detect_groups(cells, hdr, set(val_cols))
-    # assign periods left-to-right across the value columns; extras fall back
-    # to positional labels
     queue = list(periods)
     period = {}
     for c in val_cols:
@@ -155,7 +151,7 @@ def facts_for_sheet(file, rows):
     section, pending_label = "", None
     last_facts = []
     for idx, (rowno, flag, r) in enumerate(rows):
-        if idx <= hdr:  # header rows never emit facts
+        if idx <= hdr:
             continue
         line_item = next((c for c in r if c and not NUMERIC.match(c)
                           and not is_noise(c)), "")
@@ -169,10 +165,10 @@ def facts_for_sheet(file, rows):
             nxt_label = next((c for c in nxt[2] if c
                               and not NUMERIC.match(c)), "") if nxt else ""
             if nxt_vals and not nxt_label:
-                pending_label = line_item            # label precedes its values
+                pending_label = line_item
             elif last_facts and len(line_item.split()) <= 3 \
                     and not is_section_label(line_item):
-                for f in last_facts:                     # wrapped label tail
+                for f in last_facts:
                     f["line_item"] += " " + line_item
             elif is_section_label(line_item):
                 section = line_item

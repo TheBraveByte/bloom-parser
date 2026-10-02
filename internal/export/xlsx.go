@@ -9,7 +9,7 @@ import (
 
 	"github.com/xuri/excelize/v2"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 const dateTimeNumFmt = "yyyy-mm-dd hh:mm:ss"
@@ -94,7 +94,6 @@ func setCell(f *excelize.File, sheet, cell string, v parser.Value, dateStyle int
 	}
 }
 
-// sheetName derives a valid Excel sheet name (<=31 chars, no [\/: *?]).
 func sheetName(name string) string {
 	n := invalidSheetChars.ReplaceAllString(strings.TrimSpace(name), " ")
 	n = strings.TrimSpace(n)

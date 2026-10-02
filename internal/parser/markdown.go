@@ -6,7 +6,6 @@ import (
 	"strings"
 )
 
-// markdownParser extracts the first pipe table found in a markdown document.
 type markdownParser struct{}
 
 func (markdownParser) Format() Format { return FormatMarkdown }
@@ -38,8 +37,6 @@ func (markdownParser) Parse(_ context.Context, in Input) (*ParsedDocument, error
 	return normalize(rawTable{headers: splitPipeRow(lines[start]), rows: rows})
 }
 
-// splitPipeRow splits "| a | b |" into ["a","b"], tolerating missing
-// leading/trailing pipes and escaped cells kept verbatim.
 func splitPipeRow(line string) []string {
 	l := strings.TrimSpace(line)
 	l = strings.TrimPrefix(l, "|")

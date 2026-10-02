@@ -18,16 +18,10 @@ def test_normalize_reply_numeric_column():
 
 
 def test_suspect_guards():
-    # too long for the crop
     assert suspect("1,234.56", ")", "10", crop_w=40, numeric_col=True)
-    # type mismatch in numeric column
     assert suspect("hello", "x", "10", crop_w=200, numeric_col=True)
-    # fragment -> long text
     assert suspect("something long", "an", "20", crop_w=500, numeric_col=False)
-    # erasing a confident read
     assert suspect("", "Standalone", "65", crop_w=200, numeric_col=False)
-    # unrelated overwrite of confident read
     assert suspect("1,234.56", "Standalone", "65", crop_w=200, numeric_col=False)
-    # plausible correction is fine
     assert not suspect("As at", "sat", "10", crop_w=200, numeric_col=False)
     assert not suspect("481,219", "lasa.2a9", "25", crop_w=200, numeric_col=True)

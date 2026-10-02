@@ -6,7 +6,7 @@ import (
 	"encoding/csv"
 	"fmt"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 // CSV renders a ParsedDocument as UTF-8 CSV. encoding/csv handles quoting of

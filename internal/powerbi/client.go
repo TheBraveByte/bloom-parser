@@ -42,7 +42,6 @@ func (c *httpClient) base() string {
 	return defaultBaseURL
 }
 
-// scope prefixes group-scoped routes; empty workspace uses "myorg".
 func scope(workspaceID string) string {
 	if workspaceID == "" {
 		return ""
@@ -121,8 +120,6 @@ func (c *httpClient) do(ctx context.Context, method, path string, body, out any)
 	return nil
 }
 
-// statusError maps HTTP statuses onto domain errors. The response body is
-// drained only for a short message snippet; tokens are never included.
 func statusError(resp *http.Response) error {
 	msg, _ := io.ReadAll(io.LimitReader(resp.Body, 256))
 	var kind error

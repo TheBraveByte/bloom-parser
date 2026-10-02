@@ -4,7 +4,7 @@ package document_parser.v1;
 
 import "google/api/annotations.proto";
 
-option go_package = "github.com/bushadigitallimited/bloom-parser/gen/go/document_parser/v1;documentparserv1";
+option go_package = "github.com/TheBraveByte/bloom-parser/gen/go/document_parser/v1;documentparserv1";
 
 // DocumentParserService converts raw/unstructured documents into a normalized
 // tabular representation, then optionally exports that representation to

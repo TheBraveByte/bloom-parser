@@ -4,8 +4,8 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 // Sentinel errors; some alias parser's so the gRPC layer keeps one mapping.
@@ -16,7 +16,6 @@ var (
 	ErrNoPages           = errors.New("document produced no pages")
 )
 
-// validateRequest checks content is present and within the size limit.
 func (s *Service) validateRequest(req Request) error {
 	if len(req.Content) == 0 {
 		return ErrEmptyInput
@@ -27,7 +26,6 @@ func (s *Service) validateRequest(req Request) error {
 	return nil
 }
 
-// validateDocument requires at least one page and well-formed tables.
 func validateDocument(doc *document.Document) error {
 	if len(doc.Pages) == 0 {
 		return ErrNoPages

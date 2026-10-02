@@ -73,7 +73,6 @@ func looksLikeMarkdownTable(c []byte) bool {
 	return false
 }
 
-// isSeparatorRow matches markdown separator rows like "|---|---|" or "| :- | -: |".
 func isSeparatorRow(line string) bool {
 	l := strings.TrimSpace(line)
 	if l == "" || !strings.Contains(l, "-") {

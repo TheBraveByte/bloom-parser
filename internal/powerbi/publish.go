@@ -8,12 +8,11 @@ import (
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/codes"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
-var tracer = otel.Tracer("github.com/bushadigitallimited/bloom-parser/internal/powerbi")
+var tracer = otel.Tracer("github.com/TheBraveByte/bloom-parser/internal/powerbi")
 
-// rowsPerBatch stays under the Power BI push-API per-request row limit.
 const rowsPerBatch = 5000
 
 // Publisher owns the explicit flow: schema -> find-or-create dataset ->
@@ -29,9 +28,9 @@ func NewPublisher(client Client, defaultWorkspace string) *Publisher {
 
 type PublishRequest struct {
 	Doc         *parser.ParsedDocument
-	WorkspaceID string // overrides the configured default when set
+	WorkspaceID string
 	DatasetName string
-	TableName   string // defaults to "Table1"
+	TableName   string
 }
 
 type PublishResult struct {
@@ -87,8 +86,6 @@ func (p *Publisher) Publish(ctx context.Context, req PublishRequest) (*PublishRe
 	}, nil
 }
 
-// createDataset creates the push dataset with its table in one call — the
-// Power BI API only accepts table definitions at dataset creation time.
 func (p *Publisher) createDataset(ctx context.Context, ws, name, table string, cols []parser.Column) (*Dataset, error) {
 	ctx, span := tracer.Start(ctx, "powerbi.create_dataset")
 	defer span.End()

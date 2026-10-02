@@ -59,12 +59,22 @@ docs/                  architecture & implementation docs
 ## Common tasks
 
 ```sh
-make proto         # buf lint + generate (gRPC, REST gateway, OpenAPI)
-make build         # -> bin/server
-make test          # go test ./...
-make vet           # go vet ./...
-make run           # build + serve gRPC :SERVER_PORT and REST :HTTP_PORT
-make docker-build
+make help          # list all targets
+make build         # compile all Go packages (cgo-free)
+make build-ocr     # build bin/server with the Tesseract engine
+make check         # gofmt + go vet + ruff + pytest
+make test          # go test + pytest
+make serve         # build + run: gRPC :SERVER_PORT, REST :HTTP_PORT
+make docker        # build the deployment image
+make extract ARGS="out/run1 img1.png img2.png"   # table extraction
+make refine ARGS="out/run1"      # vision-LLM cell refinement (needs NVIDIA_API_KEY)
+make normalize ARGS="out/run1"   # emit normalized.csv facts
+```
+
+Regenerate gRPC/REST/OpenAPI code after editing `proto/`:
+
+```sh
+buf generate
 ```
 
 ## Configuration
@@ -128,3 +138,11 @@ See [docs/extraction.md](docs/extraction.md).
   validation, exporters and the API are untouched.
 - **New OCR provider**: implement `ocr.Engine`; nothing else changes.
 - **New destination**: implement `export.Exporter` or call the `powerbi.Client`.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+## License
+
+[MIT](LICENSE)

@@ -8,7 +8,6 @@ import (
 	"unicode"
 )
 
-// rawTable is the untyped intermediate produced by every extractor.
 type rawTable struct {
 	headers  []string
 	rows     [][]string
@@ -34,8 +33,6 @@ func NormalizeTable(headers []string, rows [][]string, attrs map[string]string) 
 	return normalize(rawTable{headers: headers, rows: rows, attrs: attrs})
 }
 
-// normalize converts a raw string table into a typed ParsedDocument:
-// header cleanup, row alignment, column type inference, cell conversion.
 func normalize(raw rawTable) (*ParsedDocument, error) {
 	if len(raw.headers) == 0 {
 		return nil, ErrNotParseable
@@ -74,7 +71,6 @@ func normalize(raw rawTable) (*ParsedDocument, error) {
 	return doc, nil
 }
 
-// normalizeHeaders fills empty names and de-duplicates duplicates.
 func normalizeHeaders(headers []string, warnings *[]Warning) []Column {
 	cols := make([]Column, len(headers))
 	seen := map[string]int{}
@@ -94,7 +90,6 @@ func normalizeHeaders(headers []string, warnings *[]Warning) []Column {
 	return cols
 }
 
-// alignRow pads short rows and truncates long ones, recording a warning.
 func alignRow(r []string, ncol, rowIdx int, warnings *[]Warning) []string {
 	switch {
 	case len(r) < ncol:
@@ -110,9 +105,6 @@ func alignRow(r []string, ncol, rowIdx int, warnings *[]Warning) []string {
 	}
 }
 
-// inferColumnType picks the dominant non-null cell type per column; ints and
-// floats count as one numeric bucket (float wins). Ties prefer string, the
-// lossless choice. Cells that then fail conversion become null + warning.
 func inferColumnType(rows [][]string, col int) ColumnType {
 	var nInt, nFloat, nBool, nTime, nStr int
 	for _, r := range rows {
@@ -193,7 +185,6 @@ func convert(s string, t ColumnType) (Value, bool) {
 	return Value{Kind: KindNull}, false
 }
 
-// parseNumber accepts plain floats plus thousand separators ("1,200.50").
 func parseNumber(s string) (float64, error) {
 	if strings.Contains(s, ",") {
 		if !validThousands(s) {
@@ -204,8 +195,6 @@ func parseNumber(s string) (float64, error) {
 	return strconv.ParseFloat(s, 64)
 }
 
-// validThousands verifies comma grouping on the integer part ("1,200" ok,
-// "1,2,3" and "12,34" rejected).
 func validThousands(s string) bool {
 	if i := strings.IndexByte(s, '.'); i >= 0 {
 		s = s[:i]
@@ -253,7 +242,6 @@ func parseTime(s string) (time.Time, bool) {
 	return time.Time{}, false
 }
 
-// isNumericText reports whether s consists only of digits, sign, dot.
 func isNumericText(s string) bool {
 	for _, r := range s {
 		if !unicode.IsDigit(r) && r != '.' && r != '-' && r != '+' {

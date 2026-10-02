@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 // Exporter renders a ParsedDocument to serialized file bytes.
@@ -14,7 +14,6 @@ type Exporter interface {
 	Extension() string
 }
 
-// validate enforces the ParsedDocument invariants exporters rely on.
 func validate(doc *parser.ParsedDocument) error {
 	if doc == nil || len(doc.Columns) == 0 {
 		return fmt.Errorf("%w: no columns", parser.ErrInvalidDocument)

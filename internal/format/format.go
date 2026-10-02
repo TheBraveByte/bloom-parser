@@ -4,14 +4,14 @@ package format
 import (
 	"context"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
 )
 
 // Options controls optional extraction behaviour shared by adapters.
 type Options struct {
-	OCR          bool   // attempt OCR on image pages
-	OCRLanguages string // engine language hint, e.g. "eng"
-	MaxPages     int    // cap on pages processed; 0 means all
+	OCR          bool
+	OCRLanguages string
+	MaxPages     int
 }
 
 // Input is a resolved, validated document ready for adaptation.

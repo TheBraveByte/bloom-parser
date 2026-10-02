@@ -5,10 +5,10 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
-	"github.com/bushadigitallimited/bloom-parser/internal/testfixtures"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/testfixtures"
 )
 
 func adapt(t *testing.T, content []byte, opts format.Options) []document.Page {
@@ -101,7 +101,7 @@ func TestRaggedAndTypedCells(t *testing.T) {
 		"S": {
 			{"id", "when"},
 			{1, "2024-03-01"},
-			{2}, // short row -> padded with null + warning
+			{2},
 		},
 	})
 	pages := adapt(t, wb, format.Options{})

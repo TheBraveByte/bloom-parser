@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"time"
 
-	pb "github.com/bushadigitallimited/bloom-parser/gen/go/document_parser/v1"
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	pb "github.com/TheBraveByte/bloom-parser/gen/go/document_parser/v1"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 func toFormat(f pb.DocumentFormat) (parser.Format, error) {
@@ -37,8 +37,6 @@ func fromFormat(f parser.Format) pb.DocumentFormat {
 	}
 }
 
-// toDocFormat maps a protobuf DocumentFormat to the ingestion format.
-// DOCUMENT_FORMAT_UNSPECIFIED becomes FormatUnknown (triggers auto-detection).
 func toDocFormat(f pb.DocumentFormat) (document.Format, error) {
 	switch f {
 	case pb.DocumentFormat_DOCUMENT_FORMAT_UNSPECIFIED:
@@ -260,9 +258,6 @@ func pageToProto(p *document.Page) *pb.Page {
 	return page
 }
 
-// docFromProto rebuilds a domain document from a client-supplied
-// ParsedDocument. Rows longer than the column list are rejected; shorter rows
-// are right-padded with nulls.
 func docFromProto(p *pb.ParsedDocument) (*parser.ParsedDocument, error) {
 	if len(p.GetColumns()) == 0 {
 		return nil, fmt.Errorf("%w: no columns", parser.ErrInvalidDocument)

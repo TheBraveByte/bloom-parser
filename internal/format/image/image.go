@@ -19,10 +19,10 @@ import (
 	_ "golang.org/x/image/tiff"
 	_ "golang.org/x/image/webp"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 // Adapter decodes images and optionally recognizes text via an OCR engine.
@@ -60,8 +60,6 @@ func (a *Adapter) Adapt(ctx context.Context, in format.Input) ([]document.Page, 
 	return []document.Page{page}, nil
 }
 
-// recognize runs OCR and records the outcome; on failure the page keeps its
-// metadata and gains a per-page error.
 func (a *Adapter) recognize(ctx context.Context, img image.Image, opts format.Options, page *document.Page) {
 	res, err := a.engine.Recognize(ctx, img, ocr.Options{Languages: opts.OCRLanguages})
 	if err != nil {

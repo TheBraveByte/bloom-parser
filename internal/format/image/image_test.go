@@ -6,14 +6,13 @@ import (
 	"image"
 	"testing"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
-	"github.com/bushadigitallimited/bloom-parser/internal/testfixtures"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/testfixtures"
 )
 
-// stubEngine is a controllable OCR engine for tests.
 type stubEngine struct {
 	avail bool
 	res   *ocr.Result
@@ -94,7 +93,6 @@ func TestOCRDisabled(t *testing.T) {
 	if page.Err == nil || page.Err.Code != document.ErrOCRUnavailable {
 		t.Fatalf("err = %v, want OCR_UNAVAILABLE", page.Err)
 	}
-	// image metadata is preserved despite the OCR failure
 	if len(page.Images) != 1 {
 		t.Error("image metadata lost on OCR failure")
 	}

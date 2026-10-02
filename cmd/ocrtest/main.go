@@ -13,10 +13,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/document"
-	"github.com/bushadigitallimited/bloom-parser/internal/format"
-	"github.com/bushadigitallimited/bloom-parser/internal/ingest"
-	"github.com/bushadigitallimited/bloom-parser/internal/ocr"
+	"github.com/TheBraveByte/bloom-parser/internal/document"
+	"github.com/TheBraveByte/bloom-parser/internal/format"
+	"github.com/TheBraveByte/bloom-parser/internal/ingest"
+	"github.com/TheBraveByte/bloom-parser/internal/ocr"
 )
 
 var cellSep = regexp.MustCompile(`[\[\](){}|]+`)
@@ -98,8 +98,6 @@ func main() {
 	fmt.Printf("wrote %s/pages.csv and %s/rows.csv\n", outDir, outDir)
 }
 
-// splitCells breaks an OCR text line on table-border characters. Cells beyond
-// col6 are joined into it so the CSV stays rectangular.
 func splitCells(line string) []string {
 	var cells []string
 	for _, c := range cellSep.Split(line, -1) {

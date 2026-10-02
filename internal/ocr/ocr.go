@@ -16,7 +16,7 @@ const ConfidenceUnknown = -1
 
 // Options tunes a single recognition call.
 type Options struct {
-	Languages string // e.g. "eng" or "eng+deu"; empty uses the engine default
+	Languages string
 }
 
 // Field is an optional key/value pair some engines expose.
@@ -29,7 +29,7 @@ type Field struct {
 // Result is the raw output of recognizing one image.
 type Result struct {
 	Text       string
-	Confidence float64 // 0..1, or ConfidenceUnknown
+	Confidence float64
 	Fields     []Field
 }
 

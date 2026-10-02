@@ -2091,7 +2091,7 @@ const file_document_parser_v1_parser_proto_rawDesc = "" +
 	"\tExportCSV\x12$.document_parser.v1.ExportCSVRequest\x1a%.document_parser.v1.ExportCSVResponse\"\"\x82\xd3\xe4\x93\x02\x1c:\x01*\"\x17/v1/documents:exportCsv\x12\x80\x01\n" +
 	"\n" +
 	"ExportXLSX\x12%.document_parser.v1.ExportXLSXRequest\x1a&.document_parser.v1.ExportXLSXResponse\"#\x82\xd3\xe4\x93\x02\x1d:\x01*\"\x18/v1/documents:exportXlsx\x12\x96\x01\n" +
-	"\x10PublishToPowerBI\x12+.document_parser.v1.PublishToPowerBIRequest\x1a,.document_parser.v1.PublishToPowerBIResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1/documents:publishPowerbiBXZVgithub.com/bushadigitallimited/bloom-parser/gen/go/document_parser/v1;documentparserv1b\x06proto3"
+	"\x10PublishToPowerBI\x12+.document_parser.v1.PublishToPowerBIRequest\x1a,.document_parser.v1.PublishToPowerBIResponse\"'\x82\xd3\xe4\x93\x02!:\x01*\"\x1c/v1/documents:publishPowerbiBQZOgithub.com/TheBraveByte/bloom-parser/gen/go/document_parser/v1;documentparserv1b\x06proto3"
 
 var (
 	file_document_parser_v1_parser_proto_rawDescOnce sync.Once

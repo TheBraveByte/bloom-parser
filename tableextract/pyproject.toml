@@ -8,16 +8,16 @@ version = "0.1.0"
 description = "Ruled-table extraction from scanned documents: OpenCV grid detection + Tesseract OCR + optional vision-LLM refinement"
 requires-python = ">=3.10"
 dependencies = [
-    "opencv-python-headless>=4.8",
-    "numpy>=1.24",
-    "pytesseract>=0.3.10",
-    "Pillow>=10",
+    "opencv-python-headless>=4.10",
+    "numpy>=2.0",
+    "pytesseract>=0.3.13",
+    "Pillow>=11",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8",
-    "ruff>=0.6",
+    "pytest>=8.3",
+    "ruff>=0.9",
 ]
 
 [project.scripts]

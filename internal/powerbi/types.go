@@ -3,7 +3,7 @@ package powerbi
 import (
 	"errors"
 
-	"github.com/bushadigitallimited/bloom-parser/internal/parser"
+	"github.com/TheBraveByte/bloom-parser/internal/parser"
 )
 
 var (
@@ -60,7 +60,6 @@ var dataType = map[parser.ColumnType]string{
 	parser.TypeTime:   "DateTime",
 }
 
-// tableDef maps normalized columns to a Power BI table schema.
 func tableDef(name string, cols []parser.Column) TableDef {
 	t := TableDef{Name: name, Columns: make([]ColumnDef, len(cols))}
 	for i, c := range cols {

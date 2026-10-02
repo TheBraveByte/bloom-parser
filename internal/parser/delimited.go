@@ -8,8 +8,6 @@ import (
 	"io"
 )
 
-// csvParser handles delimited text (comma, semicolon, tab). The first row is
-// treated as the header; the dialect is auto-detected.
 type csvParser struct{}
 
 func (csvParser) Format() Format { return FormatCSV }
@@ -18,7 +16,7 @@ func (csvParser) Parse(_ context.Context, in Input) (*ParsedDocument, error) {
 	delim := detectDelimiter(in.Content)
 	r := csv.NewReader(bytes.NewReader(in.Content))
 	r.Comma = delim
-	r.FieldsPerRecord = -1 // allow ragged rows; normalize aligns them
+	r.FieldsPerRecord = -1
 	r.LazyQuotes = true
 	r.TrimLeadingSpace = true
 
@@ -43,8 +41,6 @@ func (csvParser) Parse(_ context.Context, in Input) (*ParsedDocument, error) {
 	})
 }
 
-// detectDelimiter picks the candidate that yields the most consistent
-// multi-column split over the first lines.
 func detectDelimiter(content []byte) rune {
 	candidates := []rune{',', ';', '\t', '|'}
 	sample := content

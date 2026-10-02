@@ -19,9 +19,9 @@ def test_parse_period_formats():
 def test_normalize_value():
     assert normalize_value("476,911") == "476911"
     assert normalize_value("2,049,373") == "2049373"
-    assert normalize_value("1.008.622") == "1008622"   # OCR comma->period noise
-    assert normalize_value("1234.56") == "1234.56"     # real decimal survives
-    assert normalize_value("(4,721)") == "-4721"       # parens = negative
+    assert normalize_value("1.008.622") == "1008622"
+    assert normalize_value("1234.56") == "1234.56"
+    assert normalize_value("(4,721)") == "-4721"
     assert normalize_value("-1,087") == "-1087"
     assert normalize_value("abc") == ""
     assert normalize_value("") == ""

@@ -8,8 +8,6 @@ import (
 	"strconv"
 )
 
-// jsonParser handles a JSON array of objects. The union of object keys, in
-// first-seen order, becomes the column list.
 type jsonParser struct{}
 
 func (jsonParser) Format() Format { return FormatJSON }
@@ -66,7 +64,6 @@ type kv struct {
 	v any
 }
 
-// decodeObject streams one {...} object preserving key order.
 func decodeObject(dec *json.Decoder) ([]kv, error) {
 	t, err := dec.Token()
 	if err != nil {
@@ -93,8 +90,6 @@ func decodeObject(dec *json.Decoder) ([]kv, error) {
 	return out, nil
 }
 
-// stringifyJSON flattens a decoded scalar to canonical text; non-scalars are
-// re-encoded so nothing is silently dropped.
 func stringifyJSON(v any) string {
 	switch x := v.(type) {
 	case nil:

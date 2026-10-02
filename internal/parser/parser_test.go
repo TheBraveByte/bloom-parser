@@ -53,37 +53,31 @@ func TestParseMessyCSV(t *testing.T) {
 		}
 	}
 
-	// First data row: name "Smith, John" kept intact, amount numeric.
 	if got := doc.Rows[0][0].Str; got != "Smith, John" {
 		t.Errorf("row0 name = %q", got)
 	}
 	if doc.Rows[0][2].Float != 1200.50 {
 		t.Errorf("row0 amount = %v", doc.Rows[0][2].Float)
 	}
-	// "2,300.75" thousand separator parsed as number.
 	if doc.Rows[1][2].Float != 2300.75 {
 		t.Errorf("row1 amount = %v", doc.Rows[1][2].Float)
 	}
-	// "not-a-number" in a numeric column -> null + warning.
 	if doc.Rows[4][2].Kind != KindNull {
 		t.Errorf("row4 amount kind = %v, want null", doc.Rows[4][2].Kind)
 	}
-	// "yes"/"no" booleans convert.
 	if doc.Rows[1][4].Bool != false || doc.Rows[5][4].Bool != true {
 		t.Error("yes/no not converted to bool")
 	}
-	// Date-only and RFC3339 both parse as time.
 	if doc.Rows[5][3].Kind != KindTime {
 		t.Error("RFC3339 cell not parsed as time")
 	}
-	// Multiline quoted cell preserved.
 	if doc.Rows[0][5].Str != "first\nline" {
 		t.Errorf("row0 notes = %q", doc.Rows[0][5].Str)
 	}
 }
 
 func TestParseMarkdown(t *testing.T) {
-	doc := mustParse(t, "table.md", FormatAuto) // exercises detection
+	doc := mustParse(t, "table.md", FormatAuto)
 	if doc.Format != FormatMarkdown {
 		t.Fatalf("format = %v", doc.Format)
 	}
@@ -99,7 +93,6 @@ func TestParseMarkdown(t *testing.T) {
 	if doc.Columns[3].Type != TypeBool {
 		t.Errorf("active type = %v", doc.Columns[3].Type)
 	}
-	// Empty cells become null.
 	if doc.Rows[2][0].Kind != KindNull || doc.Rows[2][3].Kind == KindNull {
 		t.Error("empty cells not nulled correctly")
 	}
@@ -108,7 +101,6 @@ func TestParseMarkdown(t *testing.T) {
 func TestParseJSON(t *testing.T) {
 	doc := mustParse(t, "records.json", FormatJSON)
 
-	// Union of keys in first-seen order.
 	want := []string{"customer_name", "amount", "transaction_date", "active", "extra"}
 	if len(doc.Columns) != len(want) {
 		t.Fatalf("columns = %v", doc.Columns)
@@ -118,15 +110,12 @@ func TestParseJSON(t *testing.T) {
 			t.Errorf("col %d = %q, want %q", i, doc.Columns[i].Name, n)
 		}
 	}
-	// Missing keys -> null.
 	if doc.Rows[1][2].Kind != KindNull {
 		t.Error("missing key not null")
 	}
-	// Nested object serialized to JSON string.
 	if doc.Rows[1][4].Str != `{"nested":1}` {
 		t.Errorf("nested cell = %q", doc.Rows[1][4].Str)
 	}
-	// "oops" in a numeric column -> null + TYPE_MISMATCH.
 	if doc.Rows[3][1].Kind != KindNull {
 		t.Error("bad amount not null")
 	}
