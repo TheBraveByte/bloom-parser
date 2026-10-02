@@ -1,0 +1,6 @@
+[
+  {"customer_name": "John", "amount": 1200.5, "transaction_date": "2024-03-01", "active": true},
+  {"customer_name": "Alice", "amount": 2300, "active": false, "extra": {"nested": 1}},
+  {"amount": 400, "transaction_date": "2024-05-20"},
+  {"customer_name": "Bob", "amount": "oops", "transaction_date": "2024-06-01", "active": "maybe", "extra": null}
+]

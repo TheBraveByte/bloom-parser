@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Bloom Parser — local test console</title>
+<style>
+  :root {
+    --bg: #0f1115; --panel: #171a21; --line: #272b34; --fg: #e6e8ec;
+    --muted: #9aa3b2; --accent: #4f8cff; --ok: #35c28a; --err: #ff5d6c; --warn: #f0b429;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg);
+    font: 14px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  header { padding: 18px 24px; border-bottom: 1px solid var(--line); display: flex;
+    align-items: baseline; gap: 12px; }
+  header h1 { font-size: 18px; margin: 0; }
+  header span { color: var(--muted); font-size: 13px; }
+  main { display: grid; grid-template-columns: 360px 1fr; gap: 0; min-height: calc(100vh - 61px); }
+  .controls { padding: 20px 24px; border-right: 1px solid var(--line); }
+  .result { padding: 20px 24px; overflow: auto; }
+  label { display: block; margin: 14px 0 4px; color: var(--muted); font-size: 12px;
+    text-transform: uppercase; letter-spacing: .04em; }
+  select, input[type=text], input[type=number] { width: 100%; padding: 8px 10px;
+    background: var(--panel); border: 1px solid var(--line); border-radius: 8px; color: var(--fg); }
+  .drop { margin-top: 6px; padding: 22px; border: 1.5px dashed var(--line); border-radius: 10px;
+    text-align: center; color: var(--muted); cursor: pointer; transition: border-color .15s; }
+  .drop.drag { border-color: var(--accent); color: var(--fg); }
+  .drop strong { color: var(--fg); }
+  .row { display: flex; gap: 12px; }
+  .row > div { flex: 1; }
+  .check { display: flex; align-items: center; gap: 8px; margin-top: 16px; }
+  .check input { width: auto; }
+  .check label { margin: 0; text-transform: none; letter-spacing: 0; font-size: 14px; color: var(--fg); }
+  button { margin-top: 20px; width: 100%; padding: 11px; background: var(--accent); color: #fff;
+    border: 0; border-radius: 8px; font-weight: 600; cursor: pointer; }
+  button:disabled { opacity: .55; cursor: default; }
+  .meta { color: var(--muted); font-size: 12px; margin-top: 8px; word-break: break-all; }
+  .summary { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
+  .pill { background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+    padding: 5px 12px; font-size: 12px; }
+  .pill b { color: var(--accent); }
+  .page { background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+    padding: 14px 16px; margin-bottom: 14px; }
+  .page h3 { margin: 0 0 8px; font-size: 14px; display: flex; gap: 8px; align-items: center; }
+  .tag { font-size: 11px; padding: 2px 8px; border-radius: 999px; background: #232734; color: var(--muted); }
+  .tag.image { color: var(--accent); } .tag.sheet { color: var(--ok); } .tag.text { color: var(--fg); }
+  .perr { background: rgba(255,93,108,.12); border: 1px solid var(--err); color: var(--err);
+    border-radius: 8px; padding: 8px 10px; font-size: 13px; margin: 8px 0; }
+  .ptext { white-space: pre-wrap; background: #10131a; border: 1px solid var(--line);
+    border-radius: 8px; padding: 10px; max-height: 220px; overflow: auto; font-size: 13px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 8px; font-size: 13px; }
+  th, td { border: 1px solid var(--line); padding: 5px 8px; text-align: left; }
+  th { background: #10131a; color: var(--muted); }
+  td.null { color: var(--muted); font-style: italic; }
+  .warnlist { margin: 8px 0 0; padding-left: 18px; color: var(--warn); font-size: 12px; }
+  details { margin-top: 18px; } summary { cursor: pointer; color: var(--muted); }
+  pre.raw { background: #10131a; border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px; overflow: auto; font-size: 12px; max-height: 480px; }
+  .error-box { background: rgba(255,93,108,.12); border: 1px solid var(--err); color: var(--err);
+    border-radius: 10px; padding: 14px 16px; }
+  .empty { color: var(--muted); margin-top: 40px; text-align: center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Bloom Parser</h1><span>local test console · <code>/v1/documents:extract</code></span>
+</header>
+<main>
+  <section class="controls">
+    <label>Document</label>
+    <div class="drop" id="drop">
+      <div id="dropLabel"><strong>Click to choose</strong> or drop files<br>
+      <span class="meta">images · pdf · xlsx · csv · json</span></div>
+    </div>
+    <input type="file" id="file" hidden multiple
+      accept="image/png,image/jpeg,image/webp,image/tiff,image/gif,image/bmp,application/pdf,.xlsx,.csv,.json,.md" />
+    <div class="meta" id="fileMeta"></div>
+
+    <label>Format</label>
+    <select id="format">
+      <option value="DOCUMENT_FORMAT_UNSPECIFIED">Auto-detect</option>
+      <option value="DOCUMENT_FORMAT_PNG">PNG</option>
+      <option value="DOCUMENT_FORMAT_JPEG">JPEG</option>
+      <option value="DOCUMENT_FORMAT_WEBP">WEBP</option>
+      <option value="DOCUMENT_FORMAT_TIFF">TIFF</option>
+      <option value="DOCUMENT_FORMAT_GIF">GIF</option>
+      <option value="DOCUMENT_FORMAT_BMP">BMP</option>
+      <option value="DOCUMENT_FORMAT_PDF">PDF</option>
+      <option value="DOCUMENT_FORMAT_XLSX">XLSX</option>
+      <option value="DOCUMENT_FORMAT_CSV">CSV / delimited</option>
+      <option value="DOCUMENT_FORMAT_JSON">JSON</option>
+      <option value="DOCUMENT_FORMAT_MARKDOWN_TABLE">Markdown table</option>
+    </select>
+
+    <div class="row">
+      <div>
+        <label>OCR languages</label>
+        <input type="text" id="langs" value="eng" />
+      </div>
+      <div>
+        <label>Max pages</label>
+        <input type="number" id="maxPages" min="0" value="0" />
+      </div>
+    </div>
+
+    <div class="check">
+      <input type="checkbox" id="ocr" checked />
+      <label for="ocr">Attempt OCR on image pages</label>
+    </div>
+
+    <div class="check">
+      <input type="checkbox" id="cv" />
+      <label for="cv">OpenCV table pipeline (scanned tables)</label>
+    </div>
+    <div class="check" id="refineRow" style="display:none">
+      <input type="checkbox" id="refine" />
+      <label for="refine">Vision-LLM refine of low-confidence cells (slow)</label>
+    </div>
+
+    <button id="go" disabled>Extract</button>
+    <div class="meta" id="status"></div>
+  </section>
+
+  <section class="result" id="result">
+    <div class="empty">Choose a document and press <b>Extract</b>.</div>
+  </section>
+</main>
+
+<script>
+const $ = (id) => document.getElementById(id);
+let files = [];
+
+function toBase64(buf) {
+  const b = new Uint8Array(buf); let s = "";
+  const chunk = 0x8000;
+  for (let i = 0; i < b.length; i += chunk) s += String.fromCharCode.apply(null, b.subarray(i, i + chunk));
+  return btoa(s);
+}
+
+function pickFiles(list) {
+  files = [];
+  let pending = list.length;
+  for (const f of list) {
+    const r = new FileReader();
+    r.onload = () => { files.push({ name: f.name, buf: r.result }); if (--pending === 0) $("go").disabled = false; };
+    r.readAsArrayBuffer(f);
+  }
+  const names = [...list].map(f => f.name);
+  $("fileMeta").textContent = names.length === 1
+    ? `${names[0]} · ${list[0].size.toLocaleString()} bytes`
+    : `${names.length} files`;
+  $("dropLabel").innerHTML = `<strong>${names.length === 1 ? names[0] : names.length + " files"}</strong>`;
+}
+
+$("drop").onclick = () => $("file").click();
+$("file").onchange = (e) => e.target.files.length && pickFiles(e.target.files);
+["dragover", "dragenter"].forEach(ev => $("drop").addEventListener(ev, e => {
+  e.preventDefault(); $("drop").classList.add("drag");
+}));
+["dragleave", "drop"].forEach(ev => $("drop").addEventListener(ev, e => {
+  e.preventDefault(); $("drop").classList.remove("drag");
+}));
+$("drop").addEventListener("drop", e => e.dataTransfer.files.length && pickFiles(e.dataTransfer.files));
+
+$("cv").onchange = () => { $("refineRow").style.display = $("cv").checked ? "" : "none"; };
+
+$("go").onclick = async () => {
+  if (!files.length) return;
+  $("cv").checked ? tableExtract() : grpcExtract();
+};
+
+async function tableExtract() {
+  $("go").disabled = true;
+  $("status").textContent = `Extracting ${files.length} file(s) (OpenCV)…`;
+  const fd = new FormData();
+  for (const f of files) fd.append("file", new Blob([f.buf]), f.name);
+  fd.append("refine", $("refine").checked ? "true" : "false");
+  const t0 = performance.now();
+  try {
+    const res = await fetch("/v1/table-extract", { method: "POST", body: fd });
+    const text = await res.text();
+    $("status").textContent = `${res.status} · ${(performance.now() - t0).toFixed(0)} ms`;
+    if (!res.ok) return renderError({ code: res.status, message: text });
+    renderFacts(JSON.parse(text));
+  } catch (err) {
+    $("status").textContent = "request failed";
+    renderError({ message: String(err) });
+  } finally {
+    $("go").disabled = false;
+  }
+}
+
+async function grpcExtract() {
+  $("go").disabled = true; $("status").textContent = "Extracting…";
+  const f = files[0];
+  const body = {
+    document: { name: f.name, content: toBase64(f.buf), format: $("format").value },
+    options: { ocr: $("ocr").checked, ocr_languages: $("langs").value, max_pages: Number($("maxPages").value) || 0 },
+  };
+  const t0 = performance.now();
+  try {
+    const res = await fetch("/v1/documents:extract", {
+      method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body),
+    });
+    const json = await res.json();
+    $("status").textContent = `${res.status} · ${(performance.now() - t0).toFixed(0)} ms`;
+    res.ok ? render(json.document) : renderError(json);
+  } catch (err) {
+    $("status").textContent = "request failed";
+    renderError({ message: String(err) });
+  } finally {
+    $("go").disabled = false;
+  }
+}
+
+function esc(s) { return (s ?? "").toString().replace(/[&<>]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])); }
+
+function parseCSV(text) {
+  const rows = []; let row = [], cur = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { cur += '"'; i++; } else q = false; }
+      else cur += c;
+    } else if (c === '"') q = true;
+    else if (c === ',') { row.push(cur); cur = ""; }
+    else if (c === '\n' || c === '\r') {
+      if (c === '\r' && text[i + 1] === '\n') i++;
+      row.push(cur); cur = "";
+      if (row.length > 1 || row[0] !== "") rows.push(row);
+      row = [];
+    } else cur += c;
+  }
+  if (cur !== "" || row.length) { row.push(cur); rows.push(row); }
+  return rows;
+}
+
+let lastCSV = "";
+
+function renderFacts(res) {
+  lastCSV = res.csv || "";
+  const rows = parseCSV(lastCSV);
+  const hdr = rows[0] || [];
+  const flagIdx = hdr.indexOf("flag");
+  const bad = (res.files || []).filter(f => f.error);
+  let h = `<div class="summary">
+    <span class="pill">files <b>${(res.files || []).length}</b></span>
+    <span class="pill">facts <b>${res.rows}</b></span>
+    <span class="pill">flagged <b>${res.flagged}</b></span>
+    <span class="pill">failed <b>${bad.length}</b></span>
+    <span class="pill"><a id="dl" href="#" style="color:var(--accent)">download CSV</a></span>
+  </div>`;
+  for (const f of bad) h += `<div class="perr"><b>${esc(f.file)}</b> — ${esc(f.error)}</div>`;
+  h += `<table><thead><tr>` +
+    hdr.map(c => `<th>${esc(c)}</th>`).join("") + "</tr></thead><tbody>";
+  for (const r of rows.slice(1)) {
+    const flagged = flagIdx >= 0 && r[flagIdx];
+    h += `<tr${flagged ? ' style="color:var(--warn)"' : ""}>` +
+      hdr.map((_, i) => `<td>${esc(r[i] ?? "")}</td>`).join("") + "</tr>";
+  }
+  h += "</tbody></table>";
+  $("result").innerHTML = h;
+  $("dl").onclick = (e) => {
+    e.preventDefault();
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([lastCSV], { type: "text/csv" }));
+    a.download = (files.length === 1 ? files[0].name.replace(/\.[^.]*$/, "") : "tables") + ".normalized.csv";
+    a.click();
+  };
+}
+
+function renderError(e) {
+  $("result").innerHTML = `<div class="error-box"><b>${esc(e.code ?? "error")}</b><br>${esc(e.message)}</div>`;
+}
+
+function valueText(v) {
+  if (!v || Object.keys(v).length === 0) return { t: "", null: true };
+  if ("stringValue" in v) return { t: v.stringValue };
+  if ("intValue" in v) return { t: v.intValue };
+  if ("doubleValue" in v) return { t: v.doubleValue };
+  if ("boolValue" in v) return { t: String(v.boolValue) };
+  if ("datetimeValue" in v) return { t: v.datetimeValue };
+  return { t: "", null: true };
+}
+
+function tableHTML(tbl) {
+  const cols = tbl.columns || [];
+  let h = "<table><thead><tr>" + cols.map(c => `<th>${esc(c.name)}<br><span style="font-weight:400;font-size:11px">${esc((c.type||"").replace("COLUMN_TYPE_","").toLowerCase())}</span></th>`).join("") + "</tr></thead><tbody>";
+  for (const row of (tbl.rows || [])) {
+    h += "<tr>" + cols.map((_, i) => {
+      const v = valueText((row.values || [])[i] || {});
+      return v.null ? `<td class="null">null</td>` : `<td>${esc(v.t)}</td>`;
+    }).join("") + "</tr>";
+  }
+  return h + "</tbody></table>";
+}
+
+function render(doc) {
+  if (!doc) return renderError({ message: "empty response" });
+  const pages = doc.pages || [];
+  const failed = pages.filter(p => p.error).length;
+  let h = `<div class="summary">
+    <span class="pill">format <b>${esc((doc.format||"").replace("DOCUMENT_FORMAT_",""))}</b></span>
+    <span class="pill">pages <b>${pages.length}</b></span>
+    <span class="pill">failed <b>${failed}</b></span>
+    <span class="pill">name <b>${esc(doc.name || "—")}</b></span>
+  </div>`;
+
+  for (const p of pages) {
+    const kind = (p.kind || "").replace("PAGE_KIND_", "").toLowerCase();
+    h += `<div class="page"><h3>Page ${p.number} <span class="tag ${kind}">${kind}</span>
+      <span class="meta">${esc(p.source || "")}</span></h3>`;
+    if (p.error) h += `<div class="perr"><b>${esc(p.error.code)}</b> — ${esc(p.error.message)}</div>`;
+    for (const im of (p.images || []))
+      h += `<div class="meta">image: ${esc(im.format)} · ${im.width}×${im.height} · ${esc(im.colorModel)}</div>`;
+    if (p.confidence != null && p.confidence >= 0)
+      h += `<div class="meta">confidence: ${(p.confidence * 100).toFixed(1)}%</div>`;
+    if (p.text) h += `<div class="ptext">${esc(p.text)}</div>`;
+    for (const t of (p.tables || [])) h += tableHTML(t);
+    const warns = (p.warnings || []);
+    if (warns.length) h += `<ul class="warnlist">` + warns.map(w => `<li>${esc(w.code)}: ${esc(w.message)}</li>`).join("") + `</ul>`;
+    h += `</div>`;
+  }
+  h += `<details><summary>Raw JSON</summary><pre class="raw">${esc(JSON.stringify(doc, null, 2))}</pre></details>`;
+  $("result").innerHTML = h;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+syntax = "proto3";
+
+package document_parser.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "github.com/bushadigitallimited/bloom-parser/gen/go/document_parser/v1;documentparserv1";
+
+// DocumentParserService converts raw/unstructured documents into a normalized
+// tabular representation, then optionally exports that representation to
+// CSV, XLSX or a Power BI push dataset.
+//
+// Intended workflow:
+//
+//   Raw document --> ParseDocument --> ParsedDocument
+//                                        |
+//                 +----------------------+----------------------+
+//                 |                      |                      |
+//                 v                      v                      v
+//           ExportCSV (bytes)     ExportXLSX (bytes)    PublishToPowerBI
+//
+// Every endpoint is independently usable. Export* and PublishToPowerBI accept
+// either a raw DocumentInput (parsed inline) or a ParsedDocument returned by a
+// previous ParseDocument call, so clients can parse once and fan out to many
+// destinations without re-parsing.
+service DocumentParserService {
+  // ExtractDocument ingests any supported input (image, PDF, spreadsheet or
+  // tabular text) through one pipeline and returns the common Document: one or
+  // more pages carrying text, typed tables, image metadata and extracted
+  // fields. Per-page failures are reported on each page rather than failing the
+  // whole request.
+  //
+  // Validation:
+  //   - request.document is required and document.content must be non-empty and
+  //     within the configured size limit.
+  //   - document.format may be DOCUMENT_FORMAT_UNSPECIFIED to auto-detect.
+  //
+  // Errors:
+  //   - INVALID_ARGUMENT: missing/empty document or oversized content.
+  //   - FAILED_PRECONDITION: content cannot be decoded as the detected format.
+  rpc ExtractDocument(ExtractDocumentRequest) returns (ExtractDocumentResponse) {
+    option (google.api.http) = {
+      post: "/v1/documents:extract"
+      body: "*"
+    };
+  }
+
+  // ParseDocument converts a raw tabular document (delimited text, markdown
+  // table or JSON array) into a normalized ParsedDocument. For images, PDFs and
+  // spreadsheets use ExtractDocument.
+  //
+  // Validation:
+  //   - request.document is required.
+  //   - document.content must be non-empty.
+  //   - document.format may be DOCUMENT_FORMAT_UNSPECIFIED to auto-detect.
+  //
+  // Errors:
+  //   - INVALID_ARGUMENT: missing/empty document, or content that does not
+  //     match the declared (or detected) format.
+  //   - FAILED_PRECONDITION: content is not recognisable as a supported format.
+  rpc ParseDocument(ParseDocumentRequest) returns (ParseDocumentResponse) {
+    option (google.api.http) = {
+      post: "/v1/documents:parse"
+      body: "*"
+    };
+  }
+
+  // ExportCSV renders the source document as UTF-8 CSV bytes.
+  //
+  // Errors:
+  //   - INVALID_ARGUMENT: missing source, or a ParsedDocument whose rows do
+  //     not align with its columns.
+  //   - FAILED_PRECONDITION: inline raw document cannot be parsed.
+  //   - INTERNAL: CSV serialisation failure.
+  rpc ExportCSV(ExportCSVRequest) returns (ExportCSVResponse) {
+    option (google.api.http) = {
+      post: "/v1/documents:exportCsv"
+      body: "*"
+    };
+  }
+
+  // ExportXLSX renders the source document as a real .xlsx workbook.
+  // Numbers are written as numeric cells, booleans as booleans and datetimes
+  // as date-formatted cells.
+  //
+  // Errors: same contract as ExportCSV.
+  rpc ExportXLSX(ExportXLSXRequest) returns (ExportXLSXResponse) {
+    option (google.api.http) = {
+      post: "/v1/documents:exportXlsx"
+      body: "*"
+    };
+  }
+
+  // PublishToPowerBI publishes the source document to a Power BI push dataset.
+  //
+  // Flow: resolve source --> map schema --> find-or-create dataset -->
+  // clear existing rows --> push rows in batches --> return identifiers.
+  //
+  // Validation:
+  //   - request.dataset_name is required.
+  //   - request.table_name defaults to "Table1" when empty.
+  //   - request.workspace_id overrides the server-configured default; when
+  //     both are empty the caller's "myorg" scope is used.
+  //
+  // Errors:
+  //   - INVALID_ARGUMENT: missing source or dataset_name.
+  //   - FAILED_PRECONDITION: Power BI credentials are not configured.
+  //   - UNAUTHENTICATED: token acquisition failed.
+  //   - PERMISSION_DENIED: the service principal lacks dataset rights.
+  //   - UNAVAILABLE: the Power BI REST API is unreachable or throttling.
+  //   - INTERNAL: any other failure.
+  rpc PublishToPowerBI(PublishToPowerBIRequest) returns (PublishToPowerBIResponse) {
+    option (google.api.http) = {
+      post: "/v1/documents:publishPowerbi"
+      body: "*"
+    };
+  }
+}
+
+// DocumentFormat identifies the shape of raw document content.
+enum DocumentFormat {
+  // Let the server detect the format from the content.
+  DOCUMENT_FORMAT_UNSPECIFIED = 0;
+  // Markdown pipe tables ("| a | b |\n|---|---|\n| 1 | 2 |").
+  DOCUMENT_FORMAT_MARKDOWN_TABLE = 1;
+  // Delimited text (comma, tab or semicolon; dialect auto-detected).
+  DOCUMENT_FORMAT_CSV = 2;
+  // A JSON array of objects; the union of object keys becomes the columns.
+  DOCUMENT_FORMAT_JSON = 3;
+  // PNG image.
+  DOCUMENT_FORMAT_PNG = 4;
+  // JPEG image.
+  DOCUMENT_FORMAT_JPEG = 5;
+  // WebP image.
+  DOCUMENT_FORMAT_WEBP = 6;
+  // TIFF image.
+  DOCUMENT_FORMAT_TIFF = 7;
+  // PDF document (text and/or scanned pages).
+  DOCUMENT_FORMAT_PDF = 8;
+  // XLSX spreadsheet workbook.
+  DOCUMENT_FORMAT_XLSX = 9;
+  // GIF image.
+  DOCUMENT_FORMAT_GIF = 10;
+  // BMP image.
+  DOCUMENT_FORMAT_BMP = 11;
+}
+
+// PageKind describes what a page primarily carries.
+enum PageKind {
+  PAGE_KIND_UNSPECIFIED = 0;
+  // Native or OCR text (PDF text layer, delimited/markdown/JSON).
+  PAGE_KIND_TEXT = 1;
+  // A raster image, extracted via OCR when enabled.
+  PAGE_KIND_IMAGE = 2;
+  // A spreadsheet sheet.
+  PAGE_KIND_SHEET = 3;
+}
+
+// ColumnType is the normalized logical type of a column.
+enum ColumnType {
+  COLUMN_TYPE_UNSPECIFIED = 0;
+  COLUMN_TYPE_STRING = 1;
+  COLUMN_TYPE_INTEGER = 2;
+  COLUMN_TYPE_DECIMAL = 3;
+  COLUMN_TYPE_BOOLEAN = 4;
+  COLUMN_TYPE_DATETIME = 5;
+}
+
+// DocumentInput is a raw, unparsed document.
+message DocumentInput {
+  // Declared format; DOCUMENT_FORMAT_UNSPECIFIED triggers auto-detection.
+  DocumentFormat format = 1;
+  // Raw bytes of the document. Required, non-empty.
+  bytes content = 2;
+  // Optional human-readable name, propagated to the parsed result and used as
+  // the basis for generated file names.
+  string name = 3;
+}
+
+// Column describes one normalized output column.
+message Column {
+  string name = 1;
+  ColumnType type = 2;
+}
+
+// Value is a single typed cell. An unset kind represents null/absent.
+message Value {
+  oneof kind {
+    string string_value = 1;
+    int64 int_value = 2;
+    double double_value = 3;
+    bool bool_value = 4;
+    // RFC 3339 timestamp, e.g. "2024-03-01T10:30:00Z".
+    string datetime_value = 5;
+  }
+}
+
+// Row is a positional record; values[i] corresponds to columns[i].
+// Rows shorter than the column list are treated as right-padded with nulls.
+message Row {
+  repeated Value values = 1;
+}
+
+// ParseWarning describes a non-fatal issue encountered while parsing.
+message ParseWarning {
+  enum Severity {
+    SEVERITY_UNSPECIFIED = 0;
+    SEVERITY_INFO = 1;
+    SEVERITY_WARNING = 2;
+    SEVERITY_ERROR = 3;
+  }
+  Severity severity = 1;
+  // Stable machine-readable code, e.g. "TYPE_MISMATCH", "MISSING_COLUMN".
+  string code = 2;
+  string message = 3;
+  // 0-based location of the offending cell; -1 when not applicable.
+  int32 row = 4;
+  int32 column = 5;
+}
+
+// DocumentMetadata carries derived facts about a parsed document.
+message DocumentMetadata {
+  // Format that was actually used to parse (populated on auto-detect too).
+  DocumentFormat detected_format = 1;
+  int32 row_count = 2;
+  int32 column_count = 3;
+  // Free-form extractor attributes, e.g. {"delimiter": ";"}.
+  map<string, string> attributes = 4;
+}
+
+// ParsedDocument is the normalized, source-of-truth representation produced by
+// the parser and consumed by every exporter/destination.
+message ParsedDocument {
+  string name = 1;
+  repeated Column columns = 2;
+  repeated Row rows = 3;
+  repeated ParseWarning warnings = 4;
+  DocumentMetadata metadata = 5;
+}
+
+// ImageInfo records decoded image metadata (no pixel data).
+message ImageInfo {
+  // Encoded format, e.g. "png", "jpeg", "webp", "tiff".
+  string format = 1;
+  int32 width = 2;
+  int32 height = 3;
+  // Logical colour model, e.g. "rgba", "gray", "ycbcr".
+  string color_model = 4;
+}
+
+// Field is one extracted key/value pair (e.g. an OCR form field).
+message Field {
+  string key = 1;
+  Value value = 2;
+  // Engine confidence 0..1, or -1 when unknown.
+  double confidence = 3;
+}
+
+// PageError is a structured, per-page failure. Code is stable and
+// machine-readable (e.g. "DECODE_FAILED", "OCR_UNAVAILABLE"); message never
+// contains document bytes.
+message PageError {
+  string code = 1;
+  string message = 2;
+}
+
+// Page is one unit of a document: a PDF page, a spreadsheet sheet or an image.
+// A page that failed to process carries a non-empty error; sibling pages are
+// unaffected.
+message Page {
+  // 1-based position within the document.
+  int32 number = 1;
+  PageKind kind = 2;
+  // Human label: "page-3", a sheet name or an image name.
+  string source = 3;
+  // Extracted or native text, if any.
+  string text = 4;
+  // Typed tables extracted from this page (spreadsheet sheet, PDF table, ...).
+  repeated ParsedDocument tables = 5;
+  repeated ImageInfo images = 6;
+  repeated Field fields = 7;
+  // Engine confidence 0..1, or -1 when unknown.
+  double confidence = 8;
+  repeated ParseWarning warnings = 9;
+  // Set when this page failed; unset on success.
+  PageError error = 10;
+}
+
+// Document is the common, source-of-truth representation produced for every
+// supported input, independent of the original format.
+message Document {
+  string name = 1;
+  // Format actually used (populated on auto-detect too).
+  DocumentFormat format = 2;
+  repeated Page pages = 3;
+  // Document-level warnings not tied to a single page.
+  repeated ParseWarning warnings = 4;
+  // Free-form derived attributes.
+  map<string, string> attributes = 5;
+}
+
+// ExtractOptions tunes optional extraction behaviour.
+message ExtractOptions {
+  // Attempt OCR on image pages.
+  bool ocr = 1;
+  // OCR language hint, e.g. "eng" or "eng+deu".
+  string ocr_languages = 2;
+  // Cap on pages/sheets processed; 0 uses the server default.
+  int32 max_pages = 3;
+}
+
+message ExtractDocumentRequest {
+  // Required.
+  DocumentInput document = 1;
+  ExtractOptions options = 2;
+}
+
+message ExtractDocumentResponse {
+  Document document = 1;
+}
+
+// DataSource lets export/publish endpoints consume either a raw document
+// (parsed inline) or an already-parsed ParsedDocument. Exactly one field must
+// be set.
+message DataSource {
+  oneof source {
+    DocumentInput document = 1;
+    ParsedDocument parsed = 2;
+  }
+}
+
+message ParseDocumentRequest {
+  // Required.
+  DocumentInput document = 1;
+}
+
+message ParseDocumentResponse {
+  ParsedDocument document = 1;
+}
+
+// ExportCSVRequest selects the data to export. Exactly one source must be set.
+message ExportCSVRequest {
+  DataSource source = 1;
+}
+
+// ExportXLSXRequest selects the data to export. Exactly one source must be set.
+message ExportXLSXRequest {
+  DataSource source = 1;
+}
+
+// ExportedFile is a serialized export payload.
+message ExportedFile {
+  // Serialized file bytes (UTF-8 CSV or .xlsx workbook).
+  bytes content = 1;
+  // Suggested file name, e.g. "report.csv".
+  string filename = 2;
+  // MIME type of content.
+  string content_type = 3;
+  // Number of data rows written (excluding the header).
+  int64 row_count = 4;
+}
+
+message ExportCSVResponse {
+  ExportedFile file = 1;
+}
+
+message ExportXLSXResponse {
+  ExportedFile file = 1;
+}
+
+message PublishToPowerBIRequest {
+  // Required.
+  DataSource source = 1;
+  // Optional override of the server-configured workspace (group) id.
+  // Empty + unconfigured server default => publish to "My workspace".
+  string workspace_id = 2;
+  // Required. Dataset display name; reused if a dataset with this name
+  // already exists in the workspace.
+  string dataset_name = 3;
+  // Optional. Defaults to "Table1".
+  string table_name = 4;
+}
+
+message PublishToPowerBIResponse {
+  string dataset_id = 1;
+  string workspace_id = 2;
+  string table_name = 3;
+  int64 rows_pushed = 4;
+}

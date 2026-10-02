@@ -1,0 +1,738 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "document_parser/v1/parser.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "DocumentParserService",
+      "description": "DocumentParserService converts raw/unstructured documents into a normalized\ntabular representation, then optionally exports that representation to\nCSV, XLSX or a Power BI push dataset.\n\nIntended workflow:\n\n  Raw document --\u003e ParseDocument --\u003e ParsedDocument\n                                       |\n                +----------------------+----------------------+\n                |                      |                      |\n                v                      v                      v\n          ExportCSV (bytes)     ExportXLSX (bytes)    PublishToPowerBI\n\nEvery endpoint is independently usable. Export* and PublishToPowerBI accept\neither a raw DocumentInput (parsed inline) or a ParsedDocument returned by a\nprevious ParseDocument call, so clients can parse once and fan out to many\ndestinations without re-parsing."
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/documents:exportCsv": {
+      "post": {
+        "summary": "ExportCSV renders the source document as UTF-8 CSV bytes.",
+        "description": "Errors:\n  - INVALID_ARGUMENT: missing source, or a ParsedDocument whose rows do\n    not align with its columns.\n  - FAILED_PRECONDITION: inline raw document cannot be parsed.\n  - INTERNAL: CSV serialisation failure.",
+        "operationId": "DocumentParserService_ExportCSV",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ExportCSVResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "ExportCSVRequest selects the data to export. Exactly one source must be set.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ExportCSVRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DocumentParserService"
+        ]
+      }
+    },
+    "/v1/documents:exportXlsx": {
+      "post": {
+        "summary": "ExportXLSX renders the source document as a real .xlsx workbook.\nNumbers are written as numeric cells, booleans as booleans and datetimes\nas date-formatted cells.",
+        "description": "Errors: same contract as ExportCSV.",
+        "operationId": "DocumentParserService_ExportXLSX",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ExportXLSXResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "ExportXLSXRequest selects the data to export. Exactly one source must be set.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ExportXLSXRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DocumentParserService"
+        ]
+      }
+    },
+    "/v1/documents:extract": {
+      "post": {
+        "summary": "ExtractDocument ingests any supported input (image, PDF, spreadsheet or\ntabular text) through one pipeline and returns the common Document: one or\nmore pages carrying text, typed tables, image metadata and extracted\nfields. Per-page failures are reported on each page rather than failing the\nwhole request.",
+        "description": "Validation:\n  - request.document is required and document.content must be non-empty and\n    within the configured size limit.\n  - document.format may be DOCUMENT_FORMAT_UNSPECIFIED to auto-detect.\n\nErrors:\n  - INVALID_ARGUMENT: missing/empty document or oversized content.\n  - FAILED_PRECONDITION: content cannot be decoded as the detected format.",
+        "operationId": "DocumentParserService_ExtractDocument",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ExtractDocumentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ExtractDocumentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DocumentParserService"
+        ]
+      }
+    },
+    "/v1/documents:parse": {
+      "post": {
+        "summary": "ParseDocument converts a raw tabular document (delimited text, markdown\ntable or JSON array) into a normalized ParsedDocument. For images, PDFs and\nspreadsheets use ExtractDocument.",
+        "description": "Validation:\n  - request.document is required.\n  - document.content must be non-empty.\n  - document.format may be DOCUMENT_FORMAT_UNSPECIFIED to auto-detect.\n\nErrors:\n  - INVALID_ARGUMENT: missing/empty document, or content that does not\n    match the declared (or detected) format.\n  - FAILED_PRECONDITION: content is not recognisable as a supported format.",
+        "operationId": "DocumentParserService_ParseDocument",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ParseDocumentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1ParseDocumentRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DocumentParserService"
+        ]
+      }
+    },
+    "/v1/documents:publishPowerbi": {
+      "post": {
+        "summary": "PublishToPowerBI publishes the source document to a Power BI push dataset.",
+        "description": "Flow: resolve source --\u003e map schema --\u003e find-or-create dataset --\u003e\nclear existing rows --\u003e push rows in batches --\u003e return identifiers.\n\nValidation:\n  - request.dataset_name is required.\n  - request.table_name defaults to \"Table1\" when empty.\n  - request.workspace_id overrides the server-configured default; when\n    both are empty the caller's \"myorg\" scope is used.\n\nErrors:\n  - INVALID_ARGUMENT: missing source or dataset_name.\n  - FAILED_PRECONDITION: Power BI credentials are not configured.\n  - UNAUTHENTICATED: token acquisition failed.\n  - PERMISSION_DENIED: the service principal lacks dataset rights.\n  - UNAVAILABLE: the Power BI REST API is unreachable or throttling.\n  - INTERNAL: any other failure.",
+        "operationId": "DocumentParserService_PublishToPowerBI",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1PublishToPowerBIResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1PublishToPowerBIRequest"
+            }
+          }
+        ],
+        "tags": [
+          "DocumentParserService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "ParseWarningSeverity": {
+      "type": "string",
+      "enum": [
+        "SEVERITY_UNSPECIFIED",
+        "SEVERITY_INFO",
+        "SEVERITY_WARNING",
+        "SEVERITY_ERROR"
+      ],
+      "default": "SEVERITY_UNSPECIFIED"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1Column": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/v1ColumnType"
+        }
+      },
+      "description": "Column describes one normalized output column."
+    },
+    "v1ColumnType": {
+      "type": "string",
+      "enum": [
+        "COLUMN_TYPE_UNSPECIFIED",
+        "COLUMN_TYPE_STRING",
+        "COLUMN_TYPE_INTEGER",
+        "COLUMN_TYPE_DECIMAL",
+        "COLUMN_TYPE_BOOLEAN",
+        "COLUMN_TYPE_DATETIME"
+      ],
+      "default": "COLUMN_TYPE_UNSPECIFIED",
+      "description": "ColumnType is the normalized logical type of a column."
+    },
+    "v1DataSource": {
+      "type": "object",
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/v1DocumentInput"
+        },
+        "parsed": {
+          "$ref": "#/definitions/v1ParsedDocument"
+        }
+      },
+      "description": "DataSource lets export/publish endpoints consume either a raw document\n(parsed inline) or an already-parsed ParsedDocument. Exactly one field must\nbe set."
+    },
+    "v1Document": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "format": {
+          "$ref": "#/definitions/v1DocumentFormat",
+          "description": "Format actually used (populated on auto-detect too)."
+        },
+        "pages": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Page"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ParseWarning"
+          },
+          "description": "Document-level warnings not tied to a single page."
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Free-form derived attributes."
+        }
+      },
+      "description": "Document is the common, source-of-truth representation produced for every\nsupported input, independent of the original format."
+    },
+    "v1DocumentFormat": {
+      "type": "string",
+      "enum": [
+        "DOCUMENT_FORMAT_UNSPECIFIED",
+        "DOCUMENT_FORMAT_MARKDOWN_TABLE",
+        "DOCUMENT_FORMAT_CSV",
+        "DOCUMENT_FORMAT_JSON",
+        "DOCUMENT_FORMAT_PNG",
+        "DOCUMENT_FORMAT_JPEG",
+        "DOCUMENT_FORMAT_WEBP",
+        "DOCUMENT_FORMAT_TIFF",
+        "DOCUMENT_FORMAT_PDF",
+        "DOCUMENT_FORMAT_XLSX",
+        "DOCUMENT_FORMAT_GIF",
+        "DOCUMENT_FORMAT_BMP"
+      ],
+      "default": "DOCUMENT_FORMAT_UNSPECIFIED",
+      "description": "DocumentFormat identifies the shape of raw document content.\n\n - DOCUMENT_FORMAT_UNSPECIFIED: Let the server detect the format from the content.\n - DOCUMENT_FORMAT_MARKDOWN_TABLE: Markdown pipe tables (\"| a | b |\\n|---|---|\\n| 1 | 2 |\").\n - DOCUMENT_FORMAT_CSV: Delimited text (comma, tab or semicolon; dialect auto-detected).\n - DOCUMENT_FORMAT_JSON: A JSON array of objects; the union of object keys becomes the columns.\n - DOCUMENT_FORMAT_PNG: PNG image.\n - DOCUMENT_FORMAT_JPEG: JPEG image.\n - DOCUMENT_FORMAT_WEBP: WebP image.\n - DOCUMENT_FORMAT_TIFF: TIFF image.\n - DOCUMENT_FORMAT_PDF: PDF document (text and/or scanned pages).\n - DOCUMENT_FORMAT_XLSX: XLSX spreadsheet workbook.\n - DOCUMENT_FORMAT_GIF: GIF image.\n - DOCUMENT_FORMAT_BMP: BMP image."
+    },
+    "v1DocumentInput": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "$ref": "#/definitions/v1DocumentFormat",
+          "description": "Declared format; DOCUMENT_FORMAT_UNSPECIFIED triggers auto-detection."
+        },
+        "content": {
+          "type": "string",
+          "format": "byte",
+          "description": "Raw bytes of the document. Required, non-empty."
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional human-readable name, propagated to the parsed result and used as\nthe basis for generated file names."
+        }
+      },
+      "description": "DocumentInput is a raw, unparsed document."
+    },
+    "v1DocumentMetadata": {
+      "type": "object",
+      "properties": {
+        "detectedFormat": {
+          "$ref": "#/definitions/v1DocumentFormat",
+          "description": "Format that was actually used to parse (populated on auto-detect too)."
+        },
+        "rowCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "columnCount": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "attributes": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Free-form extractor attributes, e.g. {\"delimiter\": \";\"}."
+        }
+      },
+      "description": "DocumentMetadata carries derived facts about a parsed document."
+    },
+    "v1ExportCSVRequest": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/v1DataSource"
+        }
+      },
+      "description": "ExportCSVRequest selects the data to export. Exactly one source must be set."
+    },
+    "v1ExportCSVResponse": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "$ref": "#/definitions/v1ExportedFile"
+        }
+      }
+    },
+    "v1ExportXLSXRequest": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/v1DataSource"
+        }
+      },
+      "description": "ExportXLSXRequest selects the data to export. Exactly one source must be set."
+    },
+    "v1ExportXLSXResponse": {
+      "type": "object",
+      "properties": {
+        "file": {
+          "$ref": "#/definitions/v1ExportedFile"
+        }
+      }
+    },
+    "v1ExportedFile": {
+      "type": "object",
+      "properties": {
+        "content": {
+          "type": "string",
+          "format": "byte",
+          "description": "Serialized file bytes (UTF-8 CSV or .xlsx workbook)."
+        },
+        "filename": {
+          "type": "string",
+          "description": "Suggested file name, e.g. \"report.csv\"."
+        },
+        "contentType": {
+          "type": "string",
+          "description": "MIME type of content."
+        },
+        "rowCount": {
+          "type": "string",
+          "format": "int64",
+          "description": "Number of data rows written (excluding the header)."
+        }
+      },
+      "description": "ExportedFile is a serialized export payload."
+    },
+    "v1ExtractDocumentRequest": {
+      "type": "object",
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/v1DocumentInput",
+          "description": "Required."
+        },
+        "options": {
+          "$ref": "#/definitions/v1ExtractOptions"
+        }
+      }
+    },
+    "v1ExtractDocumentResponse": {
+      "type": "object",
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/v1Document"
+        }
+      }
+    },
+    "v1ExtractOptions": {
+      "type": "object",
+      "properties": {
+        "ocr": {
+          "type": "boolean",
+          "description": "Attempt OCR on image pages."
+        },
+        "ocrLanguages": {
+          "type": "string",
+          "description": "OCR language hint, e.g. \"eng\" or \"eng+deu\"."
+        },
+        "maxPages": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Cap on pages/sheets processed; 0 uses the server default."
+        }
+      },
+      "description": "ExtractOptions tunes optional extraction behaviour."
+    },
+    "v1Field": {
+      "type": "object",
+      "properties": {
+        "key": {
+          "type": "string"
+        },
+        "value": {
+          "$ref": "#/definitions/v1Value"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Engine confidence 0..1, or -1 when unknown."
+        }
+      },
+      "description": "Field is one extracted key/value pair (e.g. an OCR form field)."
+    },
+    "v1ImageInfo": {
+      "type": "object",
+      "properties": {
+        "format": {
+          "type": "string",
+          "description": "Encoded format, e.g. \"png\", \"jpeg\", \"webp\", \"tiff\"."
+        },
+        "width": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "height": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "colorModel": {
+          "type": "string",
+          "description": "Logical colour model, e.g. \"rgba\", \"gray\", \"ycbcr\"."
+        }
+      },
+      "description": "ImageInfo records decoded image metadata (no pixel data)."
+    },
+    "v1Page": {
+      "type": "object",
+      "properties": {
+        "number": {
+          "type": "integer",
+          "format": "int32",
+          "description": "1-based position within the document."
+        },
+        "kind": {
+          "$ref": "#/definitions/v1PageKind"
+        },
+        "source": {
+          "type": "string",
+          "description": "Human label: \"page-3\", a sheet name or an image name."
+        },
+        "text": {
+          "type": "string",
+          "description": "Extracted or native text, if any."
+        },
+        "tables": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ParsedDocument"
+          },
+          "description": "Typed tables extracted from this page (spreadsheet sheet, PDF table, ...)."
+        },
+        "images": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ImageInfo"
+          }
+        },
+        "fields": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Field"
+          }
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Engine confidence 0..1, or -1 when unknown."
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ParseWarning"
+          }
+        },
+        "error": {
+          "$ref": "#/definitions/v1PageError",
+          "description": "Set when this page failed; unset on success."
+        }
+      },
+      "description": "Page is one unit of a document: a PDF page, a spreadsheet sheet or an image.\nA page that failed to process carries a non-empty error; sibling pages are\nunaffected."
+    },
+    "v1PageError": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "description": "PageError is a structured, per-page failure. Code is stable and\nmachine-readable (e.g. \"DECODE_FAILED\", \"OCR_UNAVAILABLE\"); message never\ncontains document bytes."
+    },
+    "v1PageKind": {
+      "type": "string",
+      "enum": [
+        "PAGE_KIND_UNSPECIFIED",
+        "PAGE_KIND_TEXT",
+        "PAGE_KIND_IMAGE",
+        "PAGE_KIND_SHEET"
+      ],
+      "default": "PAGE_KIND_UNSPECIFIED",
+      "description": "PageKind describes what a page primarily carries.\n\n - PAGE_KIND_TEXT: Native or OCR text (PDF text layer, delimited/markdown/JSON).\n - PAGE_KIND_IMAGE: A raster image, extracted via OCR when enabled.\n - PAGE_KIND_SHEET: A spreadsheet sheet."
+    },
+    "v1ParseDocumentRequest": {
+      "type": "object",
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/v1DocumentInput",
+          "description": "Required."
+        }
+      }
+    },
+    "v1ParseDocumentResponse": {
+      "type": "object",
+      "properties": {
+        "document": {
+          "$ref": "#/definitions/v1ParsedDocument"
+        }
+      }
+    },
+    "v1ParseWarning": {
+      "type": "object",
+      "properties": {
+        "severity": {
+          "$ref": "#/definitions/ParseWarningSeverity"
+        },
+        "code": {
+          "type": "string",
+          "description": "Stable machine-readable code, e.g. \"TYPE_MISMATCH\", \"MISSING_COLUMN\"."
+        },
+        "message": {
+          "type": "string"
+        },
+        "row": {
+          "type": "integer",
+          "format": "int32",
+          "description": "0-based location of the offending cell; -1 when not applicable."
+        },
+        "column": {
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "ParseWarning describes a non-fatal issue encountered while parsing."
+    },
+    "v1ParsedDocument": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "columns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Column"
+          }
+        },
+        "rows": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Row"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ParseWarning"
+          }
+        },
+        "metadata": {
+          "$ref": "#/definitions/v1DocumentMetadata"
+        }
+      },
+      "description": "ParsedDocument is the normalized, source-of-truth representation produced by\nthe parser and consumed by every exporter/destination."
+    },
+    "v1PublishToPowerBIRequest": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "$ref": "#/definitions/v1DataSource",
+          "description": "Required."
+        },
+        "workspaceId": {
+          "type": "string",
+          "description": "Optional override of the server-configured workspace (group) id.\nEmpty + unconfigured server default =\u003e publish to \"My workspace\"."
+        },
+        "datasetName": {
+          "type": "string",
+          "description": "Required. Dataset display name; reused if a dataset with this name\nalready exists in the workspace."
+        },
+        "tableName": {
+          "type": "string",
+          "description": "Optional. Defaults to \"Table1\"."
+        }
+      }
+    },
+    "v1PublishToPowerBIResponse": {
+      "type": "object",
+      "properties": {
+        "datasetId": {
+          "type": "string"
+        },
+        "workspaceId": {
+          "type": "string"
+        },
+        "tableName": {
+          "type": "string"
+        },
+        "rowsPushed": {
+          "type": "string",
+          "format": "int64"
+        }
+      }
+    },
+    "v1Row": {
+      "type": "object",
+      "properties": {
+        "values": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Value"
+          }
+        }
+      },
+      "description": "Row is a positional record; values[i] corresponds to columns[i].\nRows shorter than the column list are treated as right-padded with nulls."
+    },
+    "v1Value": {
+      "type": "object",
+      "properties": {
+        "stringValue": {
+          "type": "string"
+        },
+        "intValue": {
+          "type": "string",
+          "format": "int64"
+        },
+        "doubleValue": {
+          "type": "number",
+          "format": "double"
+        },
+        "boolValue": {
+          "type": "boolean"
+        },
+        "datetimeValue": {
+          "type": "string",
+          "description": "RFC 3339 timestamp, e.g. \"2024-03-01T10:30:00Z\"."
+        }
+      },
+      "description": "Value is a single typed cell. An unset kind represents null/absent."
+    }
+  }
+}

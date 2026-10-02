@@ -1,0 +1,17 @@
+bin/
+.env
+*.xlsx
+!tests/fixtures/*.xlsx
+.venv-ocr/
+out/
+.ruff_cache/
+.pytest_cache/
+__pycache__/
+*.egg-info/
+
+balance_sheets1/
+balance_sheets1.zip
+
+.DS_Store
+.idea/
+*.swp

@@ -1,0 +1,10 @@
+.git
+.venv-ocr
+out
+balance_sheets1
+balance_sheets1.zip
+bin
+*.env
+.env
+**/__pycache__
+**/*.pyc
