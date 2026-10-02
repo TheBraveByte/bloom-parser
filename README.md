@@ -29,6 +29,11 @@ The core pipeline never knows a format's internals — each format lives behind 
 adapter, and the OCR engine lives behind an interface. Adding a format is one
 adapter plus one registration. See [docs/architecture.md](docs/architecture.md).
 
+Docs: [how it works](docs/how-it-works.md) (with the end-to-end flow chart) ·
+[user guide](docs/user-guide.md) · [architecture](docs/architecture.md) ·
+[extraction](docs/extraction.md) · [gRPC/REST API](docs/grpc-api.md) ·
+[parsing pipeline](docs/parsing-pipeline.md) · [supported formats](docs/supported-formats.md)
+
 ## Layout
 
 ```
