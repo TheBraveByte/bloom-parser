@@ -8,3 +8,5 @@ bin
 .env
 **/__pycache__
 **/*.pyc
+web/node_modules
+cmd/server/web/dist
