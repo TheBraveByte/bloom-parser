@@ -3,7 +3,6 @@ WORKDIR /src
 COPY web/package.json web/bun.lock ./web/
 RUN cd web && bun install --frozen-lockfile
 COPY web/ ./web/
-COPY cmd/server/web/dist/.keep ./cmd/server/web/dist/.keep
 RUN cd web && bun run build
 
 FROM golang:1.26-bookworm AS gobuild
