@@ -17,8 +17,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
 COPY --from=webbuild /src/cmd/server/web/dist ./cmd/server/web/dist
-RUN CGO_ENABLED=1 go build -tags tesseract -o /out/server ./cmd/server \
-    && CGO_ENABLED=0 go build -o /out/ocrtest ./cmd/ocrtest
+RUN CGO_ENABLED=1 go build -tags tesseract -o /out/server ./cmd/server
 
 # pinned to bookworm: trixie renamed liblept5
 FROM python:3.12-slim-bookworm AS pybuild
@@ -33,7 +32,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 COPY --from=pybuild /usr/local /usr/local
 COPY --from=gobuild /out/server /usr/local/bin/bloom-server
-COPY --from=gobuild /out/ocrtest /usr/local/bin/ocrtest
 COPY tableextract/ ./tableextract/
 EXPOSE 8080 50051
 ENV SERVER_PORT=50051 HTTP_PORT=8080

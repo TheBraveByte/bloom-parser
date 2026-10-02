@@ -4,15 +4,19 @@ Go gRPC/REST document-extraction service + a Python table-extraction toolkit.
 
 ## Layout
 
-- `cmd/server` — gRPC + REST gateway server (`web/` test console embedded)
-- `cmd/ocrtest` — batch image-ingestion runner (Go pipeline)
+- `cmd/server` — gRPC + REST gateway server; embeds the built SPA from
+  `cmd/server/web/dist` and exposes `POST /v1/table-extract` (multipart bulk
+  upload → the Python pipeline below)
 - `internal/` — document model, format adapters, ingest pipeline, ocr engine,
-  parser, service layer, testfixtures
+  parser, service layer, testfixtures, textract (subprocess runner)
+- `web/` — Vue 3 + Vite + Tailwind v4 console (`bun run build` → embeds)
 - `tableextract/` — Python package: OpenCV grid detection + Tesseract OCR +
   vision-LLM cell refinement + schema normalization
 
 ## Commands
 
+- `make web` — build the console into `cmd/server/web/dist` (bun required)
+- `make serve` — build console + server, run with the venv wired in
 - `make build` — Go build (cgo-free). `make build-ocr` adds the Tesseract
   engine (needs `libtesseract-dev` + `libleptonica-dev`, or on macOS
   `CGO_CFLAGS="-I/opt/homebrew/include" CGO_CXXFLAGS="-I/opt/homebrew/include"

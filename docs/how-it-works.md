@@ -15,7 +15,7 @@ three kinds of traffic:
 - `POST /v1/table-extract` — a plain multipart endpoint served directly by the
   Go process, bypassing gRPC entirely
 - `/` — the embedded web console (Vue build from `web/dist`, with the static
-  `index.html` as fallback) and `/healthz`
+  `a hint message` when absent) and `/healthz`
 
 ```mermaid
 flowchart TD
@@ -28,7 +28,7 @@ flowchart TD
         GRPC[gRPC server :50051]
         GW[grpc-gateway mux<br/>/v1/*]
         TXH["tableExtractHandler<br/>POST /v1/table-extract"]
-        SPA["embedded web/dist + index.html"]
+        SPA["embedded web/dist SPA"]
 
         GW -->|in-process gRPC client| GRPC
     end

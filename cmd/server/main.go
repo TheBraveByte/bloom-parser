@@ -33,9 +33,6 @@ import (
 	"github.com/TheBraveByte/bloom-parser/internal/textract"
 )
 
-//go:embed web/index.html
-var indexHTML []byte
-
 // webDist holds the Vue console built by `bun run build` in web/. The
 // directory may only contain a placeholder when the frontend was not built.
 //
@@ -152,8 +149,8 @@ func rootHandler(gateway http.Handler, tr *textract.Runner, maxBytes int64) http
 			http.NotFound(w, r)
 			return
 		}
-		w.Header().Set("Content-Type", "text/html; charset=utf-8")
-		_, _ = w.Write(indexHTML)
+		w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+		_, _ = w.Write([]byte("console not built — run `make web`\n"))
 	})
 	return mux
 }
