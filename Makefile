@@ -7,6 +7,9 @@ help: ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*?## "}; {printf "  %-12s %s\n", $$1, $$2}'
 
+web: ## Build the Vue console into cmd/server/web/dist
+	cd web && bun install --frozen-lockfile && bun run build
+
 build: ## Build the Go server (default, cgo-free)
 	go build ./...
 
@@ -42,7 +45,7 @@ refine: ## python -m tableextract refine <out>
 normalize: ## python -m tableextract normalize <out>
 	PYTHONPATH=tableextract $(PY) -m tableextract normalize $(ARGS)
 
-serve: ## Run the server with /v1/table-extract wired to the venv
+serve: web ## Run the server with /v1/table-extract wired to the venv
 	go build -o bin/server ./cmd/server
 	TABLEEXTRACT_PYTHON=$(abspath $(PY)) ./bin/server
 

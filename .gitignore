@@ -15,3 +15,10 @@ balance_sheets1.zip
 .DS_Store
 .idea/
 *.swp
+
+# frontend build output (embedded into the Go binary)
+cmd/server/web/dist/*
+!cmd/server/web/dist/.keep
+web/node_modules/
+*.normalized.csv
+tables.normalized.csv

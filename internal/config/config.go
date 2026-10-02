@@ -28,7 +28,7 @@ func Load() *Config {
 	_ = godotenv.Load()
 	return &Config{
 		Port:         envInt("SERVER_PORT", 50051),
-		HTTPPort:     envInt("HTTP_PORT", 8080),
+		HTTPPort:     envInt("HTTP_PORT", envInt("PORT", 8080)), // PORT: PaaS-injected
 		LogFormat:    envStr("LOG_FORMAT", "json"),
 		LogLevel:     envLevel("LOG_LEVEL", slog.LevelInfo),
 		OTelEnabled:  envBool("OTEL_ENABLED", false),

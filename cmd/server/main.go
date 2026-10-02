@@ -2,11 +2,12 @@ package main
 
 import (
 	"context"
-	_ "embed"
+	"embed"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
+	"io/fs"
 	"log/slog"
 	"net"
 	"net/http"
@@ -34,6 +35,12 @@ import (
 
 //go:embed web/index.html
 var indexHTML []byte
+
+// webDist holds the Vue console built by `bun run build` in web/. The
+// directory may only contain a placeholder when the frontend was not built.
+//
+//go:embed all:web/dist
+var webDist embed.FS
 
 func main() {
 	if err := run(); err != nil {
@@ -127,7 +134,20 @@ func rootHandler(gateway http.Handler, tr *textract.Runner, maxBytes int64) http
 	mux := http.NewServeMux()
 	mux.Handle("/v1/", gateway)
 	mux.HandleFunc("POST /v1/table-extract", tableExtractHandler(tr, maxBytes))
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, _ *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	})
+	var spa http.Handler
+	if sub, err := fs.Sub(webDist, "web/dist"); err == nil {
+		if _, err := fs.Stat(sub, "index.html"); err == nil {
+			spa = http.FileServer(http.FS(sub))
+		}
+	}
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		if spa != nil {
+			spa.ServeHTTP(w, r)
+			return
+		}
 		if r.URL.Path != "/" {
 			http.NotFound(w, r)
 			return

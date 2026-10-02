@@ -1,3 +1,11 @@
+FROM oven/bun:1 AS webbuild
+WORKDIR /src
+COPY web/package.json web/bun.lock ./web/
+RUN cd web && bun install --frozen-lockfile
+COPY web/ ./web/
+COPY cmd/server/web/dist/.keep ./cmd/server/web/dist/.keep
+RUN cd web && bun run build
+
 FROM golang:1.26-bookworm AS gobuild
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libtesseract-dev libleptonica-dev tesseract-ocr pkg-config \
@@ -6,6 +14,7 @@ WORKDIR /src
 COPY go.mod go.sum ./
 RUN go mod download
 COPY . .
+COPY --from=webbuild /src/cmd/server/web/dist ./cmd/server/web/dist
 RUN CGO_ENABLED=1 go build -tags tesseract -o /out/server ./cmd/server \
     && CGO_ENABLED=0 go build -o /out/ocrtest ./cmd/ocrtest
 

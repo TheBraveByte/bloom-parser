@@ -1,0 +1,112 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0f1115;
+  --color-panel: #171a21;
+  --color-line: #272b34;
+  --color-fg: #e6e8ec;
+  --color-muted: #9aa3b2;
+  --color-accent: #4f8cff;
+  --color-ok: #35c28a;
+  --color-err: #ff5d6c;
+  --color-warn: #f0b429;
+  --color-well: #10131a;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --text-xs: 12px;
+  --text-sm: 13px;
+  --text-base: 14px;
+  --text-lg: 18px;
+
+  --radius-md: 8px;
+  --radius-lg: 10px;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font: var(--text-base)/1.5 var(--font-sans);
+}
+
+/* Liquid Glass — material tokens per the skill's documented ranges.
+   Approximation only: Apple publishes no official web material. */
+:root {
+  --lg-blur: 18px;
+  --lg-sat: 140%;
+  --lg-tint: 0.08;
+  --lg-sheen: 0.10;
+  --lg-lift: -1px;
+  --lg-speed: 220ms;
+}
+
+/* A quiet backdrop the glass can actually refract. Kept deliberately faint
+   so the console still reads as a dark lab instrument. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 50% at 12% -5%, rgb(79 140 255 / 0.10), transparent 60%),
+    radial-gradient(45% 40% at 90% 110%, rgb(53 194 138 / 0.06), transparent 65%);
+}
+
+/* Primary glass surface: low-alpha tint, moderate blur, upper rim sheen,
+   faint lower occlusion. For chrome — nav, sidebar, controls — not content. */
+.glass {
+  background: rgb(23 26 33 / calc(0.55 + var(--lg-tint)));
+  -webkit-backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-sat));
+  backdrop-filter: blur(var(--lg-blur)) saturate(var(--lg-sat));
+  border: 1px solid rgb(255 255 255 / 0.08);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / var(--lg-sheen)),
+    0 8px 24px rgb(0 0 0 / 0.25);
+}
+
+/* Interactive glass: one-material hover — a 1px lift, no glare, no tilt. */
+.glass-interactive {
+  transition: transform var(--lg-speed) ease, border-color var(--lg-speed) ease,
+    box-shadow var(--lg-speed) ease;
+}
+.glass-interactive:hover {
+  transform: translateY(var(--lg-lift));
+  border-color: rgb(255 255 255 / 0.14);
+}
+
+/* Glass pill: lighter material for small status chips. */
+.pill {
+  display: inline-block;
+  border: 1px solid rgb(255 255 255 / 0.08);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+  background: rgb(23 26 33 / 0.5);
+  -webkit-backdrop-filter: blur(12px) saturate(125%);
+  backdrop-filter: blur(12px) saturate(125%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.07);
+}
+.pill b { color: var(--color-accent); font-weight: 600; }
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .pill { background: var(--color-panel); backdrop-filter: none; }
+}
+
+/* Fallbacks: increase opacity before blur; no filter -> opaque surface. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass { background: var(--color-panel); }
+}
+@media (prefers-reduced-transparency: reduce), (prefers-contrast: more) {
+  .glass {
+    background: var(--color-panel);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .glass-interactive { transition: none; }
+  .glass-interactive:hover { transform: none; }
+}
+

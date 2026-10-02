@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: bloom-parser
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter
+    healthCheckPath: /healthz
+    autoDeploy: true
+    domains:
+      - bloom-parser.foldlabs.pro
+    envVars:
+      # Render injects PORT; the HTTP gateway binds it (internal/config falls
+      # back to PORT when HTTP_PORT is unset). SERVER_PORT stays internal.
+      - key: SERVER_PORT
+        value: "50051"
+      - key: LOG_FORMAT
+        value: json
+      - key: LOG_LEVEL
+        value: info
+      # tableextract is pip-installed in the image; system python3 is enough.
+      - key: TABLEEXTRACT_PYTHON
+        value: python3
+      - key: TABLEEXTRACT_DIR
+        value: /app/tableextract
+      # Vision-LLM cell refinement for /v1/table-extract?refine=true.
+      # Set in the Render dashboard (secret). Empty = refine fails closed.
+      - key: NVIDIA_API_KEY
+        sync: false
