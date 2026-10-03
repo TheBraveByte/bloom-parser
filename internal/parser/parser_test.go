@@ -11,7 +11,7 @@ import (
 
 func mustParse(t *testing.T, file string, f Format) *ParsedDocument {
 	t.Helper()
-	b, err := os.ReadFile(filepath.Join("../../tests/fixtures", file))
+	b, err := os.ReadFile(filepath.Join("testdata", file))
 	if err != nil {
 		t.Fatal(err)
 	}

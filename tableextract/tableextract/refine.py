@@ -35,6 +35,7 @@ _NUMERIC_TOKEN = re.compile(r'[\d][\d,.]*')
 
 
 def load_key(env_var="NVIDIA_API_KEY"):
+    """Return the API key from the environment or .env, or None if unset."""
     key = os.environ.get(env_var)
     if key:
         return key
@@ -42,8 +43,8 @@ def load_key(env_var="NVIDIA_API_KEY"):
     if os.path.exists(env):
         for line in open(env):
             if line.startswith(env_var + "="):
-                return line.split("=", 1)[1].strip()
-    sys.exit(f"{env_var} not set")
+                return line.split("=", 1)[1].strip() or None
+    return None
 
 
 def normalize_reply(content, numeric=False):
@@ -133,6 +134,9 @@ def suspect(new, old, old_conf, crop_w, numeric_col):
 
 def run(out_dir):
     key = load_key()
+    if not key:
+        print("NVIDIA_API_KEY not set; skipping vision-LLM refine", file=sys.stderr)
+        return
     with open(os.path.join(out_dir, "crops.csv"), newline="") as f:
         flagged = list(csv.DictReader(f))
     with open(os.path.join(out_dir, "tables.csv"), newline="") as f:
