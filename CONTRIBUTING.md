@@ -1,7 +1,8 @@
 # Contributing to bloom-parser
 
 Thanks for your interest! This document covers how to set up a dev environment,
-the checks every change must pass, and the conventions this repo follows.
+the checks every change must pass, and the conventions this repo follows. By
+participating you agree to abide by our [Code of Conduct](CODE_OF_CONDUCT.md).
 
 ## Dev setup
 

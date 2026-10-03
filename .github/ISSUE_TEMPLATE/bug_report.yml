@@ -1,0 +1,45 @@
+name: Bug report
+description: Something isn't working as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: A minimal reproduction. Include a sample input if you can.
+      placeholder: |
+        1. make serve
+        2. upload ...
+        3. ...
+    validations:
+      required: true
+  - type: dropdown
+    id: pipeline
+    attributes:
+      label: Which pipeline?
+      options:
+        - Table → normalized CSV (table-extract)
+        - Raw extract (gRPC/REST documents:extract)
+        - Other / not sure
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Go and Python versions, and any build tags (e.g. `tesseract`).
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant server output. Do not paste secrets or document contents.
+      render: shell
