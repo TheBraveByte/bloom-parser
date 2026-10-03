@@ -62,6 +62,22 @@ export async function tableExtract(files: File[], refine: boolean): Promise<Tabl
   return res.json()
 }
 
+/** Extract one file; used by the console to show live per-file progress. */
+export function tableExtractFile(file: File, refine: boolean): Promise<TableExtractResult> {
+  return tableExtract([file], refine)
+}
+
+export const CSV_HEADER = 'file,row,section,line_item,period,value,raw,flag'
+
+/** Run fn over items with bounded concurrency, awaiting all. */
+export async function pool<T>(items: T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
+  const queue = items.slice()
+  const workers = Array.from({ length: Math.min(limit, items.length) }, async () => {
+    for (let next = queue.shift(); next !== undefined; next = queue.shift()) await fn(next)
+  })
+  await Promise.all(workers)
+}
+
 export async function grpcExtract(
   file: File,
   opts: { format: string; ocr: boolean; ocrLanguages: string; maxPages: number },

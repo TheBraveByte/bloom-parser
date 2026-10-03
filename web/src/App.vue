@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, onUnmounted, ref } from 'vue'
 import DropZone from './components/DropZone.vue'
 import FactsView from './components/FactsView.vue'
 import DocView from './components/DocView.vue'
-import { grpcExtract, tableExtract, type ParsedDocument, type TableExtractResult } from './lib/api'
+import {
+  CSV_HEADER, grpcExtract, pool, tableExtractFile,
+  type ParsedDocument, type TableExtractResult,
+} from './lib/api'
 
 type Pipeline = 'table' | 'document'
 
@@ -14,11 +17,15 @@ const ocr = ref(true)
 const langs = ref('eng')
 const format = ref('DOCUMENT_FORMAT_UNSPECIFIED')
 const maxPages = ref(0)
+
 const busy = ref(false)
-const status = ref('')
 const error = ref('')
 const facts = ref<TableExtractResult>()
 const doc = ref<ParsedDocument>()
+const done = ref(0)
+const total = ref(0)
+const elapsed = ref(0)
+let timer: number | undefined
 
 const formats = [
   ['DOCUMENT_FORMAT_UNSPECIFIED', 'Auto-detect'],
@@ -29,59 +36,107 @@ const formats = [
   ['DOCUMENT_FORMAT_MARKDOWN_TABLE', 'Markdown table'],
 ]
 
+const pct = computed(() => (total.value ? Math.round((done.value / total.value) * 100) : 0))
+const secs = computed(() => (elapsed.value / 1000).toFixed(1))
+// Rough estimate: refine adds ~1 min/file; plain extract ~2s/file.
+const estimate = computed(() => {
+  if (pipeline.value !== 'table') return ''
+  const per = refine.value ? 60 : 2
+  const t = files.value.length * per
+  return t >= 60 ? `~${Math.ceil(t / 60)} min` : `~${t}s`
+})
+
+onUnmounted(() => clearInterval(timer))
+
 async function run() {
   if (!files.value.length || busy.value) return
   busy.value = true
   error.value = ''; facts.value = undefined; doc.value = undefined
+  done.value = 0; total.value = files.value.length; elapsed.value = 0
   const t0 = performance.now()
+  timer = window.setInterval(() => { elapsed.value = performance.now() - t0 }, 100)
   try {
-    if (pipeline.value === 'table') {
-      status.value = `Extracting ${files.value.length} file(s)…`
-      facts.value = await tableExtract(files.value, refine.value)
-    } else {
-      status.value = 'Extracting…'
-      doc.value = await grpcExtract(files.value[0], {
-        format: format.value, ocr: ocr.value,
-        ocrLanguages: langs.value, maxPages: maxPages.value,
-      })
-    }
-    status.value = `${(performance.now() - t0).toFixed(0)} ms`
+    if (pipeline.value === 'table') await runTable()
+    else await runDocument()
   } catch (e) {
-    status.value = 'failed'
     error.value = e instanceof Error ? e.message : String(e)
   } finally {
+    clearInterval(timer)
+    elapsed.value = performance.now() - t0
     busy.value = false
   }
+}
+
+// runTable processes files with bounded concurrency so results stream in and
+// one slow file never blocks the rest.
+async function runTable() {
+  const acc: TableExtractResult = { csv: CSV_HEADER + '\r\n', rows: 0, flagged: 0, files: [] }
+  facts.value = acc
+  await pool(files.value, 4, async (f) => {
+    try {
+      const r = await tableExtractFile(f, refine.value)
+      const body = r.csv.split(/\r?\n/).slice(1).filter(Boolean)
+      acc.csv += body.length ? body.join('\r\n') + '\r\n' : ''
+      acc.rows += r.rows; acc.flagged += r.flagged
+      acc.files.push(...r.files)
+    } catch (e) {
+      acc.files.push({ file: f.name, rows: 0, flagged: 0, error: e instanceof Error ? e.message : String(e) })
+    }
+    done.value++
+    facts.value = { ...acc } // trigger reactive re-render as rows arrive
+  })
+}
+
+async function runDocument() {
+  doc.value = await grpcExtract(files.value[0], {
+    format: format.value, ocr: ocr.value, ocrLanguages: langs.value, maxPages: maxPages.value,
+  })
+  done.value = 1
 }
 </script>
 
 <template>
   <header class="glass flex items-baseline gap-3 border-x-0 border-t-0 px-6 py-4">
     <h1 class="text-lg font-semibold">Bloom Parser</h1>
-    <span class="text-sm text-muted">document extraction console</span>
+    <span class="text-sm text-muted">scanned tables → normalized CSV</span>
   </header>
 
   <main class="grid min-h-[calc(100vh-61px)] grid-cols-[360px_1fr]">
     <section class="glass border-y-0 border-l-0 p-6">
-      <label class="label">Documents</label>
+      <label class="label">1 · Documents</label>
       <DropZone :files="files" @update="files = $event" />
 
-      <label class="label">Pipeline</label>
-      <div class="space-y-1.5">
-        <label class="flex cursor-pointer items-center gap-2 text-sm">
-          <input v-model="pipeline" type="radio" value="table" class="accent-accent">
-          Table → normalized CSV <span class="text-xs text-muted">scanned balance sheets · downloadable</span>
+      <label class="label">2 · What to produce</label>
+      <div class="space-y-2">
+        <label class="block cursor-pointer rounded-md border p-2.5 text-sm"
+          :class="pipeline === 'table' ? 'border-accent bg-accent/10' : 'border-line'">
+          <span class="flex items-center gap-2">
+            <input v-model="pipeline" type="radio" value="table" class="accent-accent">
+            <b>Table → normalized CSV</b>
+          </span>
+          <span class="mt-0.5 block pl-6 text-xs text-muted">scanned balance sheets · downloadable · recommended</span>
         </label>
-        <label class="flex cursor-pointer items-center gap-2 text-sm">
-          <input v-model="pipeline" type="radio" value="document" class="accent-accent">
-          Raw extract <span class="text-xs text-muted">gRPC · text &amp; metadata only</span>
+        <label class="block cursor-pointer rounded-md border p-2.5 text-sm"
+          :class="pipeline === 'document' ? 'border-accent bg-accent/10' : 'border-line'">
+          <span class="flex items-center gap-2">
+            <input v-model="pipeline" type="radio" value="document" class="accent-accent">
+            <b>Raw extract</b>
+          </span>
+          <span class="mt-0.5 block pl-6 text-xs text-muted">gRPC · plain text &amp; metadata · no CSV</span>
         </label>
       </div>
 
       <template v-if="pipeline === 'table'">
-        <label class="mt-4 flex cursor-pointer items-center gap-2 text-sm">
-          <input v-model="refine" type="checkbox" class="accent-accent">
-          Vision-LLM refine <span class="text-xs text-muted">slow, needs API key</span>
+        <label class="label">3 · Options</label>
+        <label class="flex cursor-pointer items-start gap-2 text-sm">
+          <input v-model="refine" type="checkbox" class="mt-1 accent-accent">
+          <span>
+            Vision-LLM refine
+            <span class="block text-xs text-muted">
+              Cleans low-confidence cells with a free vision model. Much slower —
+              use it for a few files, not a large batch.
+            </span>
+          </span>
         </label>
       </template>
       <template v-else>
@@ -103,6 +158,9 @@ async function run() {
           <input v-model="ocr" type="checkbox" class="accent-accent">
           Attempt OCR on image pages
         </label>
+        <p v-if="files.length > 1" class="mt-2 text-xs text-warn">
+          Raw extract reads only the first file.
+        </p>
       </template>
 
       <button
@@ -114,20 +172,34 @@ async function run() {
         :disabled="!files.length || busy"
         @click="run"
       >
-        {{ busy ? 'Extracting…' : `Extract ${files.length || ''}` }}
+        {{ busy ? `Extracting ${done}/${total}…` : `Extract ${files.length || ''}` }}
       </button>
-      <div class="mt-2 break-all font-mono text-xs text-muted">{{ status }}</div>
+
+      <div v-if="busy || elapsed" class="mt-3">
+        <div v-if="total > 1" class="h-1.5 overflow-hidden rounded-full bg-well">
+          <div class="h-full rounded-full bg-accent transition-[width] duration-200" :style="{ width: pct + '%' }" />
+        </div>
+        <div class="mt-1.5 flex justify-between font-mono text-xs text-muted">
+          <span>{{ busy ? `${done}/${total} · ${secs}s` : `done in ${secs}s` }}</span>
+          <span v-if="busy && estimate">{{ estimate }}</span>
+        </div>
+      </div>
     </section>
 
     <section class="overflow-auto p-6">
       <div v-if="error" class="rounded-lg border border-err bg-err/10 p-4 text-err">{{ error }}</div>
       <FactsView
-        v-else-if="facts" :result="facts"
+        v-else-if="facts && facts.files.length" :result="facts" :busy="busy"
         :single-name="files.length === 1 ? files[0].name : undefined"
       />
       <DocView v-else-if="doc" :doc="doc" />
-      <div v-else class="mt-10 text-center text-muted">
-        Choose files and press <b>Extract</b>.
+      <div v-else-if="busy" class="mt-10 text-center text-muted">Working…</div>
+      <div v-else class="mx-auto mt-16 max-w-sm text-center text-muted">
+        <p class="text-fg">Extract tables from scanned documents.</p>
+        <p class="mt-2 text-sm">
+          Drop images on the left, keep <b>Table → normalized CSV</b> selected, press
+          <b>Extract</b>, then <b>Download CSV</b>.
+        </p>
       </div>
     </section>
   </main>
@@ -136,7 +208,7 @@ async function run() {
 <style scoped>
 .label {
   display: block;
-  margin: 14px 0 4px;
+  margin: 16px 0 6px;
   font-size: var(--text-xs);
   text-transform: uppercase;
   letter-spacing: 0.04em;

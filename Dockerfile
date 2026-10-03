@@ -33,6 +33,6 @@ WORKDIR /app
 COPY --from=pybuild /usr/local /usr/local
 COPY --from=gobuild /out/server /usr/local/bin/bloom-server
 COPY tableextract/ ./tableextract/
-EXPOSE 8080 50051
-ENV SERVER_PORT=50051 HTTP_PORT=8080
+EXPOSE 8090 50051
+ENV SERVER_PORT=50051 HTTP_PORT=8090
 ENTRYPOINT ["bloom-server"]

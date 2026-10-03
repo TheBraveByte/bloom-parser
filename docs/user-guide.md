@@ -35,7 +35,7 @@ You should see:
 
 ```
 grpc server listening        addr=[::]:50051
-http/rest gateway listening  addr=:8080
+http/rest gateway listening  addr=:8090
 ```
 
 `GET /healthz` returns `200` for probes. For a cgo-free build without OCR, use
@@ -43,7 +43,7 @@ http/rest gateway listening  addr=:8080
 
 ## Web console
 
-Open `http://localhost:8080`. The console has two modes:
+Open `http://localhost:8090`. The console has two modes:
 
 - **Extract document** — drop an image, PDF, XLSX or text file; get pages of
   text, tables, images and fields back. Toggle OCR per request.
@@ -59,7 +59,7 @@ Document bytes are base64 inside JSON. All routes are generated from
 **Extract any document:**
 
 ```sh
-curl -s http://localhost:8080/v1/documents:extract -X POST \
+curl -s http://localhost:8090/v1/documents:extract -X POST \
   -H 'Content-Type: application/json' \
   -d '{"document":{"name":"report.pdf","content":"<base64>"},
        "options":{"ocr":true,"max_pages":10}}'
@@ -68,7 +68,7 @@ curl -s http://localhost:8080/v1/documents:extract -X POST \
 **Parse tabular text** (CSV, markdown table, JSON rows):
 
 ```sh
-curl -s http://localhost:8080/v1/documents:parse -X POST \
+curl -s http://localhost:8090/v1/documents:parse -X POST \
   -H 'Content-Type: application/json' \
   -d '{"document":{"name":"data.csv","content":"<base64>"}}'
 ```
@@ -77,7 +77,7 @@ curl -s http://localhost:8080/v1/documents:parse -X POST \
 by a previous call:
 
 ```sh
-curl -s http://localhost:8080/v1/documents:exportCsv -X POST \
+curl -s http://localhost:8090/v1/documents:exportCsv -X POST \
   -H 'Content-Type: application/json' \
   -d '{"parsed_document":{"columns":[...],"rows":[...]}}' --output out.csv
 ```
@@ -85,7 +85,7 @@ curl -s http://localhost:8080/v1/documents:exportCsv -X POST \
 **Scanned-table extraction** — multipart form, up to 64 files:
 
 ```sh
-curl -s http://localhost:8080/v1/table-extract -X POST \
+curl -s http://localhost:8090/v1/table-extract -X POST \
   -F 'file=@sheet1.jpg' -F 'file=@sheet2.png' -F 'refine=false'
 ```
 
@@ -133,7 +133,7 @@ Everything is env-driven (see `.env.example`). The common knobs:
 
 | Variable | Default | Purpose |
 |---|---|---|
-| `SERVER_PORT` / `HTTP_PORT` | `50051` / `8080` | listen ports |
+| `SERVER_PORT` / `HTTP_PORT` | `50051` / `8090` | listen ports |
 | `MAX_DOCUMENT_BYTES` | 32 MiB | request size cap |
 | `MAX_DOCUMENT_PAGES` | 200 | per-document page cap |
 | `OCR_LANGUAGES` | `eng` | Tesseract language hint |

@@ -1,5 +1,9 @@
 # bloom-parser
 
+[![CI](https://github.com/TheBraveByte/bloom-parser/actions/workflows/ci.yml/badge.svg)](https://github.com/TheBraveByte/bloom-parser/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Go Reference](https://pkg.go.dev/badge/github.com/TheBraveByte/bloom-parser.svg)](https://pkg.go.dev/github.com/TheBraveByte/bloom-parser)
+
 Modular document ingestion & structured-data extraction, exposed over gRPC and
 REST. One pipeline accepts images, PDFs, spreadsheets and tabular text, and
 returns a common `Document`; tabular results can be exported to CSV / XLSX or
@@ -89,7 +93,7 @@ Copy `.env.example` to `.env`. Everything is env-driven.
 | Variable | Purpose |
 |---|---|
 | `SERVER_PORT` | gRPC port (default `50051`) |
-| `HTTP_PORT` | REST gateway port (default `8080`) |
+| `HTTP_PORT` | REST gateway port (default `8090`) |
 | `LOG_FORMAT` / `LOG_LEVEL` | `json`/`text`, `debug`…`error` |
 | `OTEL_ENABLED` | `true` → stdout span exporter |
 | `MAX_DOCUMENT_BYTES` | request size cap (default 32 MiB) |
@@ -110,7 +114,7 @@ Primary RPC, `ExtractDocument`, runs the full pipeline for any format:
 
 ```sh
 # REST
-curl -s -X POST http://localhost:8080/v1/documents:extract \
+curl -s -X POST http://localhost:8090/v1/documents:extract \
   -H 'Content-Type: application/json' \
   -d '{"document":{"name":"scan.png","content":"<base64 bytes>"},"options":{"ocr":true}}'
 
@@ -146,7 +150,9 @@ See [docs/extraction.md](docs/extraction.md).
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md).
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for dev setup
+and conventions, and please follow our [Code of Conduct](CODE_OF_CONDUCT.md).
+Found a vulnerability? See [SECURITY.md](SECURITY.md).
 
 ## License
 

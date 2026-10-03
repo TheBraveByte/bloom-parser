@@ -8,7 +8,7 @@ Package-level detail lives in [architecture.md](architecture.md) and
 ## Two lanes into the service
 
 The server (`cmd/server`) opens two listeners: a gRPC server on `SERVER_PORT`
-(50051) and an HTTP server on `HTTP_PORT` (8080). The HTTP server multiplexes
+(50051) and an HTTP server on `HTTP_PORT` (8090). The HTTP server multiplexes
 three kinds of traffic:
 
 - `/v1/*` — the grpc-gateway REST proxy, which dials back into the gRPC server

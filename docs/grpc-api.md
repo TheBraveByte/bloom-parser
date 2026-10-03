@@ -59,7 +59,7 @@ OpenAPI UI. Regenerate with `buf generate`.
 
 ```sh
 # REST (reflection-free)
-curl -s -X POST http://localhost:8080/v1/documents:extract \
+curl -s -X POST http://localhost:8090/v1/documents:extract \
   -H 'Content-Type: application/json' \
   -d '{"document":{"name":"scan.png","content":"<base64 bytes>"},"options":{"ocr":true}}'
 

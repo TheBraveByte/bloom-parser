@@ -50,8 +50,8 @@ CGO_ENABLED=1 go test -tags tesseract ./...
 ## Manual end-to-end
 
 ```sh
-make serve                     # gRPC :50051, REST :8080
-curl -X POST localhost:8080/v1/documents:extract \
+make serve                     # gRPC :50051, REST :8090
+curl -X POST localhost:8090/v1/documents:extract \
   -H 'Content-Type: application/json' \
   -d '{"document":{"content":"<base64>"}}'
 ```
