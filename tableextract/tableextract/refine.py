@@ -24,7 +24,8 @@ URL = "https://integrate.api.nvidia.com/v1/chat/completions"
 MODEL_FAST = "meta/llama-3.2-11b-vision-instruct"
 MODEL_SLOW = "meta/llama-3.2-90b-vision-instruct"
 WORKERS = 4
-TIMEOUT = 60
+TIMEOUT = 25
+RETRIES = 2
 CHAR_PX = 8
 
 _SENTENCE = re.compile(
@@ -101,15 +102,15 @@ def ask(key, model, b64, label, numeric=False):
         URL, data=json.dumps(payload).encode(),
         headers={"Authorization": f"Bearer {key}",
                  "Content-Type": "application/json"})
-    for attempt in range(3):
+    for attempt in range(RETRIES):
         try:
             with urllib.request.urlopen(req, timeout=TIMEOUT) as resp:
                 body = json.load(resp)
                 return normalize_reply(
                     body["choices"][0]["message"]["content"], numeric)
         except Exception as e:  # noqa: BLE001 - retried, then logged per cell
-            if attempt < 2:
-                time.sleep(5 * (attempt + 1))
+            if attempt < RETRIES - 1:
+                time.sleep(3)
                 continue
             print(f"  api error ({model}): {e}", file=sys.stderr)
             return None

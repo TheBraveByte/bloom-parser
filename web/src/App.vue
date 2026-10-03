@@ -70,11 +70,11 @@ async function run() {
       <div class="space-y-1.5">
         <label class="flex cursor-pointer items-center gap-2 text-sm">
           <input v-model="pipeline" type="radio" value="table" class="accent-accent">
-          OpenCV table pipeline <span class="text-xs text-muted">scanned balance sheets</span>
+          Table → normalized CSV <span class="text-xs text-muted">scanned balance sheets · downloadable</span>
         </label>
         <label class="flex cursor-pointer items-center gap-2 text-sm">
           <input v-model="pipeline" type="radio" value="document" class="accent-accent">
-          Document extract <span class="text-xs text-muted">gRPC · any format</span>
+          Raw extract <span class="text-xs text-muted">gRPC · text &amp; metadata only</span>
         </label>
       </div>
 

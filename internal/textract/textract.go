@@ -161,22 +161,17 @@ func (r *Runner) runOne(ctx context.Context, f File, opts Options) (rows []strin
 	}
 	out := filepath.Join(tmp, "out")
 
-	timeout := r.Timeout
-	if opts.Refine {
-		timeout *= 4
-	}
-	ctx, cancel := context.WithTimeout(ctx, timeout)
-	defer cancel()
-
-	if err := r.exec(ctx, "extract", out, img); err != nil {
+	if err := r.stage(ctx, r.Timeout, "extract", out, img); err != nil {
 		return nil, 0, 0, err
 	}
 	if opts.Refine {
-		if err := r.exec(ctx, "refine", out); err != nil {
-			return nil, 0, 0, err
+		// Best-effort: a refine timeout or API error must never lose the file.
+		// normalize falls back to the un-refined tables, so we only log here.
+		if err := r.stage(ctx, r.Timeout*4, "refine", out); err != nil {
+			fmt.Fprintf(os.Stderr, "refine %s: %v (using un-refined tables)\n", f.Name, err)
 		}
 	}
-	if err := r.exec(ctx, "normalize", out); err != nil {
+	if err := r.stage(ctx, r.Timeout, "normalize", out); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -204,6 +199,14 @@ func joinCSV(rec []string) string {
 	_ = w.Write(rec)
 	w.Flush()
 	return string(bytes.TrimRight(buf.Bytes(), "\n"))
+}
+
+// stage runs one pipeline step under its own timeout derived from ctx, so a
+// slow refine can be bounded without starving the normalize that follows it.
+func (r *Runner) stage(ctx context.Context, d time.Duration, args ...string) error {
+	ctx, cancel := context.WithTimeout(ctx, d)
+	defer cancel()
+	return r.exec(ctx, args...)
 }
 
 func (r *Runner) exec(ctx context.Context, args ...string) error {
