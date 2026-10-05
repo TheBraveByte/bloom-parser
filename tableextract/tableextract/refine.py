@@ -82,6 +82,11 @@ def encode_crop(path):
     return base64.b64encode(png.tobytes()).decode(), w
 
 
+# Cell-transcription prompt, shaped the way prompts.chat entries are: a named
+# role up front, a strict output contract ("reply with only ..."), concrete
+# examples of the expected shape, and an explicit EMPTY escape hatch. A tight
+# contract means fewer chatty replies for normalize_reply to clean up and
+# fewer second-opinion escalations.
 def ask(key, model, b64, label, numeric=False):
     """Transcribe one cell crop via the chat-completions API. Retries on any
     failure; returns None if all attempts fail."""
@@ -89,11 +94,18 @@ def ask(key, model, b64, label, numeric=False):
         "model": model, "max_tokens": 48, "temperature": 0,
         "messages": [{"role": "user", "content": [
             {"type": "text", "text": (
-                "This image is one cell from a scanned financial table."
+                "You are a precise OCR transcriber for scanned financial"
+                " tables. The image shows exactly one table cell."
                 + (f" Its row is labelled '{label}'." if label else "")
-                + " Transcribe exactly the characters visible - typically a"
-                  " numeric amount or a short text label. Never invent text:"
-                  " if it shows only table borders or noise, reply EMPTY.")},
+                + " Rules: reply with only the exact characters printed in"
+                  " the cell - no explanation, no quotes, no trailing"
+                  " punctuation. Preserve digits, decimal points, thousand"
+                  " separators, minus signs and parentheses exactly as"
+                  " printed. The cell usually holds a numeric amount like"
+                  " 12,34,567 or a short label like Total assets. Never"
+                  " invent or guess content: if the crop shows only grid"
+                  " lines, noise or blank space, reply with the single"
+                  " word EMPTY.")},
             {"type": "image_url",
              "image_url": {"url": f"data:image/png;base64,{b64}"}},
         ]}],
@@ -133,7 +145,7 @@ def suspect(new, old, old_conf, crop_w, numeric_col):
     return False
 
 
-def run(out_dir):
+def run(out_dir, budget=None):
     key = load_key()
     if not key:
         print("NVIDIA_API_KEY not set; skipping vision-LLM refine", file=sys.stderr)
@@ -154,7 +166,17 @@ def run(out_dir):
                 n[1] += bool(NUMERIC.match(v))
     is_num = {k: v[0] >= 3 and v[1] > v[0] * 0.6 for k, v in numeric.items()}
 
+    # Wall-clock budget (seconds) shared across cells. When the caller bounds
+    # the whole pipeline, an exhausted budget keeps the OCR values for the
+    # remaining cells instead of letting a hard process kill lose the file.
+    deadline = time.monotonic() + budget if budget else None
+    skipped = 0
+
     def refine(rec):
+        nonlocal skipped
+        if deadline and time.monotonic() > deadline:
+            skipped += 1
+            return rec, None, ""
         b64, w = encode_crop(os.path.join(out_dir, "crops", rec["crop"]))
         if b64 is None:
             return rec, None, ""
@@ -191,6 +213,8 @@ def run(out_dir):
 
     with open(os.path.join(out_dir, "tables_refined.csv"), "w", newline="") as tf:
         csv.writer(tf).writerows(tables)
+    if skipped:
+        print(f"refine budget exhausted: {skipped} cells kept OCR values")
     print(f"{len(flagged)} cells sent, {changed} corrected")
     print(f"wrote {out_dir}/tables_refined.csv and refine_log.csv")
 

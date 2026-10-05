@@ -12,6 +12,13 @@ export interface TableExtractResult {
   files: FileStatus[]
 }
 
+/** AccResult is the console's accumulator: the merged CSV plus its parsed
+ *  matrix, built incrementally as per-file results stream in so the table
+ *  never re-parses the whole document on each update. */
+export interface AccResult extends TableExtractResult {
+  matrix: string[][]
+}
+
 export interface DocValue {
   stringValue?: string
   intValue?: string
@@ -43,14 +50,15 @@ export interface ParsedDocument {
   pages: DocPage[]
 }
 
-function toBase64(buf: ArrayBuffer): string {
-  const b = new Uint8Array(buf)
-  let s = ''
-  const chunk = 0x8000
-  for (let i = 0; i < b.length; i += chunk) {
-    s += String.fromCharCode.apply(null, Array.from(b.subarray(i, i + chunk)))
-  }
-  return btoa(s)
+/** Native base64 via FileReader: runs in C++, no call-stack chunking, and
+ *  avoids the intermediate binary-string the manual loop builds. */
+function fileToBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader()
+    fr.onload = () => resolve(String(fr.result).split(',', 2)[1] ?? '')
+    fr.onerror = () => reject(fr.error)
+    fr.readAsDataURL(file)
+  })
 }
 
 export async function tableExtract(files: File[], refine: boolean): Promise<TableExtractResult> {
@@ -68,6 +76,12 @@ export function tableExtractFile(file: File, refine: boolean): Promise<TableExtr
 }
 
 export const CSV_HEADER = 'file,row,section,line_item,period,value,raw,flag'
+export const CSV_COLS = CSV_HEADER.split(',')
+
+/** Body rows of a per-file CSV (header skipped) — parse once at ingest. */
+export function csvBodyRows(csv: string): string[][] {
+  return parseCSV(csv).slice(1)
+}
 
 /** Run fn over items with bounded concurrency, awaiting all. */
 export async function pool<T>(items: T[], limit: number, fn: (item: T) => Promise<void>): Promise<void> {
@@ -83,7 +97,7 @@ export async function grpcExtract(
   opts: { format: string; ocr: boolean; ocrLanguages: string; maxPages: number },
 ): Promise<ParsedDocument> {
   const body = {
-    document: { name: file.name, content: toBase64(await file.arrayBuffer()), format: opts.format },
+    document: { name: file.name, content: await fileToBase64(file), format: opts.format },
     options: {
       ocr: opts.ocr,
       ocr_languages: opts.ocrLanguages,

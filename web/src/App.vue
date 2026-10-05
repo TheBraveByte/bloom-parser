@@ -1,12 +1,16 @@
 <script setup lang="ts">
 import { computed, onUnmounted, ref } from 'vue'
+import {
+  PhFileText, PhGridFour, PhLightning, PhMoon, PhSparkle, PhSun, PhTable,
+} from '@phosphor-icons/vue'
 import DropZone from './components/DropZone.vue'
 import FactsView from './components/FactsView.vue'
 import DocView from './components/DocView.vue'
 import {
-  CSV_HEADER, grpcExtract, pool, tableExtractFile,
-  type ParsedDocument, type TableExtractResult,
+  CSV_HEADER, csvBodyRows, grpcExtract, pool, tableExtractFile,
+  type AccResult, type ParsedDocument,
 } from './lib/api'
+import { theme, toggleTheme } from './lib/theme'
 
 type Pipeline = 'table' | 'document'
 
@@ -20,7 +24,8 @@ const maxPages = ref(0)
 
 const busy = ref(false)
 const error = ref('')
-const facts = ref<TableExtractResult>()
+const facts = ref<AccResult>()
+const matrix = ref<string[][]>([])
 const doc = ref<ParsedDocument>()
 const done = ref(0)
 const total = ref(0)
@@ -36,6 +41,10 @@ const formats = [
   ['DOCUMENT_FORMAT_MARKDOWN_TABLE', 'Markdown table'],
 ]
 
+const totalSize = computed(() => {
+  const n = files.value.reduce((s, f) => s + f.size, 0)
+  return n > 1e6 ? `${(n / 1e6).toFixed(1)} MB` : `${(n / 1e3).toFixed(0)} KB`
+})
 const pct = computed(() => (total.value ? Math.round((done.value / total.value) * 100) : 0))
 const secs = computed(() => (elapsed.value / 1000).toFixed(1))
 // Rough estimate: refine adds ~1 min/file; plain extract ~2s/file.
@@ -51,7 +60,7 @@ onUnmounted(() => clearInterval(timer))
 async function run() {
   if (!files.value.length || busy.value) return
   busy.value = true
-  error.value = ''; facts.value = undefined; doc.value = undefined
+  error.value = ''; facts.value = undefined; matrix.value = []; doc.value = undefined
   done.value = 0; total.value = files.value.length; elapsed.value = 0
   const t0 = performance.now()
   timer = window.setInterval(() => { elapsed.value = performance.now() - t0 }, 100)
@@ -67,18 +76,23 @@ async function run() {
   }
 }
 
-// runTable processes files with bounded concurrency so results stream in and
-// one slow file never blocks the rest.
+// runTable processes files with bounded concurrency (one request per file, so
+// results stream in, one slow file never blocks the rest, and work spreads
+// across CPU cores). OCR dominates runtime, so parallelism is the main lever.
+const concurrency = Math.min(navigator.hardwareConcurrency || 4, 8)
+
 async function runTable() {
-  const acc: TableExtractResult = { csv: CSV_HEADER + '\r\n', rows: 0, flagged: 0, files: [] }
+  const acc: AccResult = { csv: CSV_HEADER + '\r\n', rows: 0, flagged: 0, files: [], matrix: [] }
   facts.value = acc
-  await pool(files.value, 4, async (f) => {
+  await pool(files.value, concurrency, async (f) => {
     try {
       const r = await tableExtractFile(f, refine.value)
       const body = r.csv.split(/\r?\n/).slice(1).filter(Boolean)
       acc.csv += body.length ? body.join('\r\n') + '\r\n' : ''
       acc.rows += r.rows; acc.flagged += r.flagged
       acc.files.push(...r.files)
+      // Parse each file's rows once here; the table never re-parses the CSV.
+      matrix.value = matrix.value.concat(csvBodyRows(r.csv))
     } catch (e) {
       acc.files.push({ file: f.name, rows: 0, flagged: 0, error: e instanceof Error ? e.message : String(e) })
     }
@@ -96,131 +110,175 @@ async function runDocument() {
 </script>
 
 <template>
-  <header class="glass flex items-baseline gap-3 border-x-0 border-t-0 px-6 py-4">
-    <h1 class="text-lg font-semibold">Bloom Parser</h1>
-    <span class="text-sm text-muted">scanned tables → normalized CSV</span>
+  <header class="sticky top-0 z-20 border-b border-line bg-panel/85 backdrop-blur">
+    <div class="mx-auto flex max-w-7xl items-center gap-3 px-5 py-3">
+      <span class="grid size-8 place-items-center rounded-md bg-accent text-white">
+        <PhGridFour :size="18" weight="bold" />
+      </span>
+      <div class="leading-tight">
+        <div class="text-sm font-semibold tracking-tight">bloom parser</div>
+        <div class="text-xs text-muted">scanned tables → normalized CSV</div>
+      </div>
+      <span class="pill ml-auto hidden sm:inline-flex">
+        <PhLightning :size="12" /> concurrent extraction
+      </span>
+      <button
+        class="icon-btn" :aria-label="theme === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'"
+        @click="toggleTheme"
+      >
+        <PhSun v-if="theme === 'dark'" :size="17" />
+        <PhMoon v-else :size="17" />
+      </button>
+    </div>
   </header>
 
-  <main class="grid min-h-[calc(100vh-61px)] grid-cols-[360px_1fr]">
-    <section class="glass border-y-0 border-l-0 p-6">
-      <label class="label">1 · Documents</label>
-      <DropZone :files="files" @update="files = $event" />
+  <main class="mx-auto max-w-7xl px-5 pb-16">
+    <!-- Hero strip -->
+    <section class="pb-6 pt-8">
+      <h1 class="text-xl font-semibold tracking-tight sm:text-2xl">
+        Extract tables from scanned documents.
+      </h1>
+      <p class="mt-1.5 max-w-2xl text-sm text-muted">
+        Drop statement or balance-sheet scans, pick a pipeline, and get a clean
+        normalized CSV. OpenCV finds the grid, Tesseract reads the cells, and an
+        optional vision model proofreads the low-confidence ones.
+      </p>
+      <div class="mt-3 flex flex-wrap gap-2">
+        <span class="pill"><b>OpenCV</b> grid detection</span>
+        <span class="pill"><b>Tesseract</b> OCR</span>
+        <span class="pill"><b>Vision-LLM</b> refine</span>
+        <span class="pill"><b>CSV</b> export</span>
+      </div>
+    </section>
 
-      <label class="label">2 · What to produce</label>
-      <div class="space-y-2">
-        <label class="block cursor-pointer rounded-md border p-2.5 text-sm"
-          :class="pipeline === 'table' ? 'border-accent bg-accent/10' : 'border-line'">
-          <span class="flex items-center gap-2">
-            <input v-model="pipeline" type="radio" value="table" class="accent-accent">
-            <b>Table → normalized CSV</b>
+    <!-- Intake -->
+    <section class="grid items-start gap-4 lg:grid-cols-[1.1fr_1fr]">
+      <div class="card">
+        <div class="card-head"><span class="step">1</span>Documents
+          <span v-if="files.length" class="ml-auto text-xs font-normal text-muted">
+            {{ files.length }} file{{ files.length === 1 ? '' : 's' }} · {{ totalSize }}
           </span>
-          <span class="mt-0.5 block pl-6 text-xs text-muted">scanned balance sheets · downloadable · recommended</span>
-        </label>
-        <label class="block cursor-pointer rounded-md border p-2.5 text-sm"
-          :class="pipeline === 'document' ? 'border-accent bg-accent/10' : 'border-line'">
-          <span class="flex items-center gap-2">
-            <input v-model="pipeline" type="radio" value="document" class="accent-accent">
-            <b>Raw extract</b>
-          </span>
-          <span class="mt-0.5 block pl-6 text-xs text-muted">gRPC · plain text &amp; metadata · no CSV</span>
-        </label>
+        </div>
+        <div class="card-body">
+          <DropZone :files="files" @update="files = $event" />
+        </div>
       </div>
 
-      <template v-if="pipeline === 'table'">
-        <label class="label">3 · Options</label>
-        <label class="flex cursor-pointer items-start gap-2 text-sm">
-          <input v-model="refine" type="checkbox" class="mt-1 accent-accent">
-          <span>
-            Vision-LLM refine
-            <span class="block text-xs text-muted">
-              Cleans low-confidence cells with a free vision model. Much slower —
-              use it for a few files, not a large batch.
-            </span>
-          </span>
-        </label>
-      </template>
-      <template v-else>
-        <label class="label">Format</label>
-        <select v-model="format" class="field">
-          <option v-for="[v, l] in formats" :key="v" :value="v">{{ l }}</option>
-        </select>
-        <div class="mt-3 grid grid-cols-2 gap-3">
-          <div>
-            <label class="label">OCR languages</label>
-            <input v-model="langs" type="text" class="field">
-          </div>
-          <div>
-            <label class="label">Max pages</label>
-            <input v-model.number="maxPages" type="number" min="0" class="field">
+      <div class="grid gap-4">
+        <div class="card">
+          <div class="card-head"><span class="step">2</span>Pipeline</div>
+          <div class="card-body space-y-2">
+            <label class="opt" :class="pipeline === 'table' ? 'opt-on' : ''">
+              <span class="flex items-center gap-2.5">
+                <input v-model="pipeline" type="radio" value="table" class="accent-accent">
+                <PhTable :size="16" class="text-muted" />
+                <b class="text-sm">Table → normalized CSV</b>
+                <span class="pill ml-auto">recommended</span>
+              </span>
+              <span class="mt-1 block pl-6 text-xs text-muted">
+                scanned balance sheets · streaming per-file results · downloadable
+              </span>
+            </label>
+            <label class="opt" :class="pipeline === 'document' ? 'opt-on' : ''">
+              <span class="flex items-center gap-2.5">
+                <input v-model="pipeline" type="radio" value="document" class="accent-accent">
+                <PhFileText :size="16" class="text-muted" />
+                <b class="text-sm">Raw extract</b>
+              </span>
+              <span class="mt-1 block pl-6 text-xs text-muted">
+                gRPC · plain text &amp; metadata · no CSV
+              </span>
+            </label>
           </div>
         </div>
-        <label class="mt-4 flex cursor-pointer items-center gap-2 text-sm">
-          <input v-model="ocr" type="checkbox" class="accent-accent">
-          Attempt OCR on image pages
-        </label>
-        <p v-if="files.length > 1" class="mt-2 text-xs text-warn">
-          Raw extract reads only the first file.
-        </p>
-      </template>
 
-      <button
-        class="mt-5 w-full rounded-md bg-accent py-2.5 font-semibold text-white transition duration-200
-               shadow-[inset_0_1px_0_rgb(255_255_255/0.15),0_4px_14px_rgb(79_140_255/0.25)]
-               hover:-translate-y-px hover:brightness-110 active:translate-y-0 active:brightness-90
-               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent
-               disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
-        :disabled="!files.length || busy"
-        @click="run"
-      >
-        {{ busy ? `Extracting ${done}/${total}…` : `Extract ${files.length || ''}` }}
-      </button>
-
-      <div v-if="busy || elapsed" class="mt-3">
-        <div v-if="total > 1" class="h-1.5 overflow-hidden rounded-full bg-well">
-          <div class="h-full rounded-full bg-accent transition-[width] duration-200" :style="{ width: pct + '%' }" />
+        <div class="card">
+          <div class="card-head"><span class="step">3</span>Options</div>
+          <div class="card-body">
+            <template v-if="pipeline === 'table'">
+              <label class="flex cursor-pointer items-start gap-2.5 text-sm">
+                <input v-model="refine" type="checkbox" class="mt-0.5 accent-accent">
+                <span>
+                  <span class="flex items-center gap-1.5">
+                    <PhSparkle :size="14" class="text-accent" /> Vision-LLM refine
+                  </span>
+                  <span class="mt-0.5 block text-xs text-muted">
+                    Cleans low-confidence cells with a vision model. Much slower —
+                    use it for a few files, not a large batch.
+                  </span>
+                </span>
+              </label>
+            </template>
+            <template v-else>
+              <label class="label">Format</label>
+              <select v-model="format" class="field">
+                <option v-for="[v, l] in formats" :key="v" :value="v">{{ l }}</option>
+              </select>
+              <div class="mt-3 grid grid-cols-2 gap-3">
+                <div>
+                  <label class="label">OCR languages</label>
+                  <input v-model="langs" type="text" class="field">
+                </div>
+                <div>
+                  <label class="label">Max pages</label>
+                  <input v-model.number="maxPages" type="number" min="0" class="field">
+                </div>
+              </div>
+              <label class="mt-4 flex cursor-pointer items-center gap-2 text-sm">
+                <input v-model="ocr" type="checkbox" class="accent-accent">
+                Attempt OCR on image pages
+              </label>
+              <p v-if="files.length > 1" class="mt-2 text-xs text-warn">
+                Raw extract reads only the first file.
+              </p>
+            </template>
+          </div>
         </div>
-        <div class="mt-1.5 flex justify-between font-mono text-xs text-muted">
-          <span>{{ busy ? `${done}/${total} · ${secs}s` : `done in ${secs}s` }}</span>
-          <span v-if="busy && estimate">{{ estimate }}</span>
+
+        <div class="card">
+          <div class="card-head"><span class="step">4</span>Run</div>
+          <div class="card-body">
+            <button
+              class="btn-primary w-full"
+              :disabled="!files.length || busy"
+              @click="run"
+            >
+              {{ busy ? `Extracting ${done}/${total}…` : files.length ? `Extract ${files.length} ${files.length === 1 ? 'file' : 'files'}` : 'Extract' }}
+            </button>
+            <div v-if="busy || elapsed" class="mt-3">
+              <div v-if="total > 1" class="h-1.5 overflow-hidden rounded-full bg-well">
+                <div class="h-full rounded-full bg-accent transition-[width] duration-200" :style="{ width: pct + '%' }" />
+              </div>
+              <div class="mt-1.5 flex justify-between font-mono text-xs text-muted">
+                <span>{{ busy ? `${done}/${total} · ${secs}s` : `done in ${secs}s` }}</span>
+                <span v-if="busy && estimate">{{ estimate }}</span>
+              </div>
+            </div>
+            <p v-else class="mt-2 text-center text-xs text-muted">
+              {{ files.length ? estimate || 'ready' : 'add documents to begin' }}
+            </p>
+          </div>
         </div>
       </div>
     </section>
 
-    <section class="overflow-auto p-6">
-      <div v-if="error" class="rounded-lg border border-err bg-err/10 p-4 text-err">{{ error }}</div>
+    <!-- Results -->
+    <section class="mt-6">
+      <div v-if="error" class="card border-err/50 p-4 text-sm text-err">{{ error }}</div>
       <FactsView
-        v-else-if="facts && facts.files.length" :result="facts" :busy="busy"
+        v-else-if="facts && facts.files.length" :result="facts" :matrix="matrix" :busy="busy"
         :single-name="files.length === 1 ? files[0].name : undefined"
       />
       <DocView v-else-if="doc" :doc="doc" />
-      <div v-else-if="busy" class="mt-10 text-center text-muted">Working…</div>
-      <div v-else class="mx-auto mt-16 max-w-sm text-center text-muted">
-        <p class="text-fg">Extract tables from scanned documents.</p>
-        <p class="mt-2 text-sm">
-          Drop images on the left, keep <b>Table → normalized CSV</b> selected, press
+      <div v-else-if="busy" class="card p-10 text-center text-sm text-muted">Working…</div>
+      <div v-else class="card mx-auto max-w-lg p-10 text-center">
+        <PhTable :size="28" class="mx-auto text-muted" />
+        <p class="mt-3 font-medium">No extraction yet</p>
+        <p class="mt-1.5 text-sm text-muted">
+          Drop images above, keep <b>Table → normalized CSV</b> selected, press
           <b>Extract</b>, then <b>Download CSV</b>.
         </p>
       </div>
     </section>
   </main>
 </template>
-
-<style scoped>
-.label {
-  display: block;
-  margin: 16px 0 6px;
-  font-size: var(--text-xs);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  color: var(--color-muted);
-}
-.field {
-  width: 100%;
-  padding: 8px 10px;
-  background: var(--color-panel);
-  border: 1px solid var(--color-line);
-  border-radius: var(--radius-md);
-  color: var(--color-fg);
-}
-.field:focus-visible { outline: 2px solid var(--color-accent); }
-</style>

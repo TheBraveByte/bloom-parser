@@ -12,6 +12,7 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
+	"strings"
 	"sync"
 	"time"
 )
@@ -25,8 +26,9 @@ type Runner struct {
 	// (env TABLEEXTRACT_DIR, default "tableextract"). Ignored if the path
 	// does not exist, e.g. when the package is pip-installed into Python.
 	Dir string
-	// Timeout bounds the pipeline per file. Refinement can be slow, so the
-	// effective deadline doubles when Options.Refine is set.
+	// Timeout bounds the pipeline per file. Refinement can be slow, so when
+	// Options.Refine is set the effective deadline grows to ~6x Timeout and
+	// refine itself is bounded to ~4x Timeout via --refine-budget.
 	Timeout time.Duration
 	// Workers is the max number of files processed concurrently.
 	Workers int
@@ -161,17 +163,18 @@ func (r *Runner) runOne(ctx context.Context, f File, opts Options) (rows []strin
 	}
 	out := filepath.Join(tmp, "out")
 
-	if err := r.stage(ctx, r.Timeout, "extract", out, img); err != nil {
-		return nil, 0, 0, err
-	}
+	// One subprocess runs extract -> (refine) -> normalize. The old
+	// three-stage version paid the interpreter + cv2 startup per stage.
+	// Refine stays best-effort inside the pipeline: --refine-budget keeps it
+	// within ~4x Timeout and a refine failure still produces normalized CSV.
+	args := []string{"pipeline", out, img}
+	deadline := r.Timeout
 	if opts.Refine {
-		// Best-effort: a refine timeout or API error must never lose the file.
-		// normalize falls back to the un-refined tables, so we only log here.
-		if err := r.stage(ctx, r.Timeout*4, "refine", out); err != nil {
-			fmt.Fprintf(os.Stderr, "refine %s: %v (using un-refined tables)\n", f.Name, err)
-		}
+		args = append(args, "--refine",
+			fmt.Sprintf("--refine-budget=%d", int((r.Timeout*4).Seconds())))
+		deadline = r.Timeout * 6
 	}
-	if err := r.stage(ctx, r.Timeout, "normalize", out); err != nil {
+	if err := r.stage(ctx, deadline, args...); err != nil {
 		return nil, 0, 0, err
 	}
 
@@ -183,26 +186,28 @@ func (r *Runner) runOne(ctx context.Context, f File, opts Options) (rows []strin
 	if err != nil {
 		return nil, 0, 0, fmt.Errorf("parse normalized.csv: %w", err)
 	}
+	// Re-encode with a single shared writer (one allocation run) rather than
+	// a fresh csv.Writer per row.
+	var buf bytes.Buffer
+	w := gocsv.NewWriter(&buf)
 	for _, rec := range recs[1:] {
 		facts++
 		if len(rec) > 7 && rec[7] != "" {
 			flagged++
 		}
-		rows = append(rows, joinCSV(rec))
+		_ = w.Write(rec)
+	}
+	w.Flush()
+	if err := w.Error(); err != nil {
+		return nil, 0, 0, fmt.Errorf("encode csv: %w", err)
+	}
+	if body := strings.TrimRight(buf.String(), "\n"); body != "" {
+		rows = strings.Split(body, "\n")
 	}
 	return rows, facts, flagged, nil
 }
 
-func joinCSV(rec []string) string {
-	var buf bytes.Buffer
-	w := gocsv.NewWriter(&buf)
-	_ = w.Write(rec)
-	w.Flush()
-	return string(bytes.TrimRight(buf.Bytes(), "\n"))
-}
-
-// stage runs one pipeline step under its own timeout derived from ctx, so a
-// slow refine can be bounded without starving the normalize that follows it.
+// stage runs the pipeline subprocess under a timeout derived from ctx.
 func (r *Runner) stage(ctx context.Context, d time.Duration, args ...string) error {
 	ctx, cancel := context.WithTimeout(ctx, d)
 	defer cancel()

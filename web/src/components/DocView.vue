@@ -36,11 +36,11 @@ function rowsOf(tbl: DocTable) {
       <span class="pill">name <b>{{ doc.name }}</b></span>
     </div>
 
-    <div v-for="p in doc.pages" :key="p.number" class="mb-4 rounded-lg border border-line bg-panel p-4">
-      <h3 class="mb-2 flex items-center gap-2 text-base">
+    <div v-for="p in doc.pages" :key="p.number" class="card mb-4 p-4">
+      <h3 class="mb-2 flex items-center gap-2 text-base font-medium">
         Page {{ p.number }}
-        <span class="rounded-full bg-well px-2 py-0.5 text-xs text-muted">{{ kindTag(p.kind) }}</span>
-        <span class="text-xs text-muted">{{ p.source }}</span>
+        <span class="pill">{{ kindTag(p.kind) }}</span>
+        <span class="text-xs font-normal text-muted">{{ p.source }}</span>
       </h3>
       <div v-if="p.error" class="mb-2 rounded-md border border-err/40 bg-err/10 px-3 py-2 text-sm text-err">
         <b>{{ p.error.code }}</b> — {{ p.error.message }}
@@ -80,11 +80,9 @@ function rowsOf(tbl: DocTable) {
       </ul>
     </div>
 
-    <details class="mt-4">
-      <summary class="cursor-pointer text-muted">Raw JSON</summary>
-      <pre class="mt-2 max-h-96 overflow-auto rounded-lg border border-line bg-well p-3 font-mono text-xs">{{ JSON.stringify(doc, null, 2) }}</pre>
+    <details class="card p-4">
+      <summary class="cursor-pointer text-sm text-muted">Raw JSON</summary>
+      <pre class="mt-3 max-h-96 overflow-auto rounded-md border border-line bg-well p-3 font-mono text-xs">{{ JSON.stringify(doc, null, 2) }}</pre>
     </details>
   </div>
 </template>
-
-
