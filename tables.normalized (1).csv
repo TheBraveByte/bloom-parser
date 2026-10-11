@@ -1,0 +1,557 @@
+file,row,section,line_item,period,value,raw,flag
+18391125_2.jpg,5,ASSETS,Non-current assets,col3,3220,"3,220",
+18391125_2.jpg,5,ASSETS,Non-current assets,col4,3017,"3,017",
+18391125_2.jpg,5,ASSETS,Non-current assets,col5,2252,"2,252",
+18391125_2.jpg,5,ASSETS,Non-current assets,col6,2313,"2,313",
+18391125_2.jpg,6,ASSETS,Capital work-in-progress,col3,213,213,
+18391125_2.jpg,6,ASSETS,Capital work-in-progress,col4,92,92,
+18391125_2.jpg,6,ASSETS,Capital work-in-progress,col6,92,92,
+18391125_2.jpg,7,ASSETS,Goodwill,col3,3549,"3,549",c5:15;slow
+18391125_2.jpg,7,ASSETS,Goodwill,col4,3278,"3,278",c5:15;slow
+18391125_2.jpg,8,ASSETS,Intangible assets under development,col3,302,302,
+18391125_2.jpg,8,ASSETS,Intangible assets under development,col4,173,173,
+18391125_2.jpg,10,Financial assets,(a) Investments,col3,298,298,
+18391125_2.jpg,10,Financial assets,(a) Investments,col4,1032,"1,032",
+18391125_2.jpg,10,Financial assets,(a) Investments,col6,4605,"4,605",
+18391125_2.jpg,11,Financial assets,(b) Loans,col5,127,127,
+18391125_2.jpg,11,Financial assets,(b) Loans,col6,106,106,
+18391125_2.jpg,12,Financial assets,(c) Other financial assets,col3,270,270,
+18391125_2.jpg,12,Financial assets,(c) Other financial assets,col4,205,205,
+18391125_2.jpg,12,Financial assets,(c) Other financial assets,col5,193,193,
+18391125_2.jpg,12,Financial assets,(c) Other financial assets,col6,270,270,
+18391125_2.jpg,13,Financial assets,Deferred tax assets (net),col3,321,321,c2:37;fast
+18391125_2.jpg,13,Financial assets,Deferred tax assets (net),col4,101,101,c2:37;fast
+18391125_2.jpg,14,Financial assets,Income tax assets (net) —,col3,755,755,c4:62;fast
+18391125_2.jpg,14,Financial assets,Income tax assets (net) —,col4,683,683,c4:62;fast
+18391125_2.jpg,14,Financial assets,Income tax assets (net) —,col5,392,392,c4:62;fast
+18391125_2.jpg,15,Financial assets,Other non-current assets,col3,736,736,c3:59
+18391125_2.jpg,15,Financial assets,Other non-current assets,col4,878,878,c3:59
+18391125_2.jpg,16,Financial assets,,col3,10870,"10,870",
+18391125_2.jpg,16,Financial assets,,col4,10674,"10,674",
+18391125_2.jpg,16,Financial assets,,col5,9033,"9,033",
+18391125_2.jpg,16,Financial assets,,col6,8954,"8,954",
+18391125_2.jpg,18,Financial assets,Current assets,col3,1312,"1,312",c6:63
+18391125_2.jpg,18,Financial assets,Current assets,col4,935,935,c6:63
+18391125_2.jpg,20,Financial assets,Financial assets,col3,1130,"1,130",
+18391125_2.jpg,20,Financial assets,Financial assets,col4,925,925,
+18391125_2.jpg,20,Financial assets,Financial assets,col5,1130,"1,130",
+18391125_2.jpg,21,Financial assets,,col3,6913,"6,913",
+18391125_2.jpg,21,Financial assets,,col4,6496,"6,496",
+18391125_2.jpg,21,Financial assets,,col5,4151,"4,151",
+18391125_2.jpg,22,Financial assets,,col3,9603,"9,603",
+18391125_2.jpg,22,Financial assets,,col4,8570,"8,570",
+18391125_2.jpg,22,Financial assets,,col5,7200,"7,200",
+18391125_2.jpg,22,Financial assets,,col6,6516,"6,516",
+18391125_2.jpg,23,Financial assets,(d) Other bank balances,col3,204,204,
+18391125_2.jpg,23,Financial assets,(d) Other bank balances,col4,211,211,
+18391125_2.jpg,24,Financial assets,(e) Loans,col6,153,153,
+18391125_2.jpg,25,Financial assets,,col3,3384,"3,384",
+18391125_2.jpg,25,Financial assets,,col4,2660,"2,660",
+18391125_2.jpg,25,Financial assets,,col5,1628,"1,628",
+18391125_2.jpg,26,Financial assets,,col3,910,910,
+18391125_2.jpg,26,Financial assets,,col4,893,893,
+18391125_2.jpg,26,Financial assets,,col5,536,536,
+18391125_2.jpg,27,Financial assets,,col3,23456,"23,456",
+18391125_2.jpg,27,Financial assets,,col4,20690,"20,690",
+18391125_2.jpg,27,Financial assets,,col5,14978,"14,978",
+18391125_2.jpg,28,Financial assets,,col3,1000000,"1,000,000",c2:10;fast
+18391125_2.jpg,29,Financial assets,Total assets,col3,34326,"34,326",
+18391125_2.jpg,29,Financial assets,Total assets,col4,31364,"31,364",
+18391125_2.jpg,29,Financial assets,Total assets,col5,24011,"24,011",
+18391125_2.jpg,31,EQUITY AND LIABILITIES,Equity share capital,col3,563,563,
+18391125_2.jpg,31,EQUITY AND LIABILITIES,Equity share capital,col4,563,563,
+18391125_2.jpg,32,EQUITY AND LIABILITIES,Otherequity,col3,22876,"22,876",
+18391125_2.jpg,32,EQUITY AND LIABILITIES,Otherequity,col4,20610,"20,610",
+18391125_2.jpg,32,EQUITY AND LIABILITIES,Otherequity,col5,20051,"20,051",
+18391125_2.jpg,32,EQUITY AND LIABILITIES,Otherequity,col6,18259,"18,259",
+18391125_2.jpg,33,EQUITY AND LIABILITIES,nie ~~ to Shareholders of the,col3,23439,"23,439",
+18391125_2.jpg,33,EQUITY AND LIABILITIES,nie ~~ to Shareholders of the,col4,21173,"21,173",
+18391125_2.jpg,33,EQUITY AND LIABILITIES,nie ~~ to Shareholders of the,col5,20614,"20,614",
+18391125_2.jpg,34,EQUITY AND LIABILITIES,Non-controlling interests,col3,3,3,
+18391125_2.jpg,34,EQUITY AND LIABILITIES,Non-controlling interests,col4,26,26,
+18391125_2.jpg,35,EQUITY AND LIABILITIES,Total Equity,col3,23442,"23,442",
+18391125_2.jpg,35,EQUITY AND LIABILITIES,Total Equity,col4,21199,"21,199",
+18391125_2.jpg,35,EQUITY AND LIABILITIES,Total Equity,col5,20614,"20,614",
+18391125_2.jpg,35,EQUITY AND LIABILITIES,Total Equity,col6,18822,"18,822",
+18391125_2.jpg,38,Financial Liabilities,(a) Borrowings,col3,630,630,
+18391125_2.jpg,38,Financial Liabilities,(a) Borrowings,col4,492,492,
+18391125_2.jpg,39,Financial Liabilities,(b) Other financial liabilities,col3,353,353,c5:55
+18391125_2.jpg,39,Financial Liabilities,(b) Other financial liabilities,col4,232,232,c5:55
+18391125_2.jpg,40,Financial Liabilities,Provisions,col3,878,878,
+18391125_2.jpg,40,Financial Liabilities,Provisions,col4,813,813,
+18391125_2.jpg,41,Financial Liabilities,Deferred tax liabilities (net),col3,356,356,"c5:59,c6:69"
+18391125_2.jpg,41,Financial Liabilities,Deferred tax liabilities (net),col4,302,302,"c5:59,c6:69"
+18391125_2.jpg,42,Financial Liabilities,tax liabilities (net) Income,col3,20,20,c6:56;slow
+18391125_2.jpg,43,Financial Liabilities,(Other non-current liabilities,col3,26,26,
+18391125_2.jpg,43,Financial Liabilities,(Other non-current liabilities,col4,35,35,
+18391125_2.jpg,44,Financial Liabilities,Non-current liabilities (Total,col3,2263,"2,263",
+18391125_2.jpg,44,Financial Liabilities,Non-current liabilities (Total,col4,1874,"1,874",
+18391125_2.jpg,44,Financial Liabilities,Non-current liabilities (Total,col6,642,642,
+18391125_2.jpg,47,Financial liabilities,(a) Borrowings,col3,1780,"1,780",c6:49
+18391125_2.jpg,47,Financial liabilities,(a) Borrowings,col4,1159,"1,159",c6:49
+18391125_2.jpg,48,Financial liabilities,(b) Trade payables,col3,3813,"3,813",
+18391125_2.jpg,48,Financial liabilities,(b) Trade payables,col4,3922,"3,922",
+18391125_2.jpg,48,Financial liabilities,(b) Trade payables,col6,1321,"1,321",
+18391125_2.jpg,49,Financial liabilities,(c) Other financial liabilities,col3,1256,"1,256",
+18391125_2.jpg,49,Financial liabilities,(c) Other financial liabilities,col4,1232,"1,232",
+18391125_2.jpg,49,Financial liabilities,(c) Other financial liabilities,col6,67,67,
+18391125_2.jpg,50,Financial liabilities,Income tax liabilities (net),col3,316,316,
+18391125_2.jpg,50,Financial liabilities,Income tax liabilities (net),col4,424,424,
+18391125_2.jpg,50,Financial liabilities,Income tax liabilities (net),col5,44,44,
+18391125_2.jpg,50,Financial liabilities,Income tax liabilities (net),col6,48,48,
+18391125_2.jpg,51,Financial liabilities,Provisions,col3,229,229,
+18391125_2.jpg,51,Financial liabilities,Provisions,col4,235,235,
+18391125_2.jpg,51,Financial liabilities,Provisions,col5,71,71,
+18391125_2.jpg,51,Financial liabilities,Provisions,col6,74,74,
+18391125_2.jpg,52,Financial liabilities,Other current liabilities -,col3,1227,"1,227",
+18391125_2.jpg,52,Financial liabilities,Other current liabilities -,col4,1319,"1,319",
+18391125_2.jpg,53,Financial liabilities,Total current liabilities,col3,8621,"8,621",
+18391125_2.jpg,53,Financial liabilities,Total current liabilities,col4,8291,"8,291",
+18391125_2.jpg,53,Financial liabilities,Total current liabilities,col5,2696,"2,696",
+18391125_2.jpg,54,Financial liabilities,K,col3,10884,"10,884",
+18391125_2.jpg,54,Financial liabilities,K,col4,10165,"10,165",
+18391125_2.jpg,55,Financial liabilities,and {Total equity liabilities,col3,34326,"34,326",
+18391125_2.jpg,55,Financial liabilities,and {Total equity liabilities,col4,31364,"31,364",
+18391125_2.jpg,55,Financial liabilities,and {Total equity liabilities,col5,24011,"24,011",
+18448275_3.jpg,5,Non-Current Assets,Property. Plantand Equipment,col3,1539391,15.393.91,
+18448275_3.jpg,5,Non-Current Assets,Property. Plantand Equipment,col4,1684552,16.845.52,
+18448275_3.jpg,6,Non-Current Assets,Capital Work-in-progress,col3,217.01,217.01,
+18448275_3.jpg,6,Non-Current Assets,Capital Work-in-progress,col4,183.67,183.67,
+18448275_3.jpg,7,Non-Current Assets,,col3,528.70,528.70,
+18448275_3.jpg,8,Non-Current Assets,Other Intangible Assets,col3,11.86,11.86,
+18448275_3.jpg,8,Non-Current Assets,Other Intangible Assets,col4,1363,1363,
+18448275_3.jpg,10,Financial Assets,InveStiT>erMs,col3,1728734,17.287.34,c4:53;fast
+18448275_3.jpg,11,Financial Assets,Loans,col3,39.22,39.22,
+18448275_3.jpg,11,Financial Assets,Loans,col4,40.59,40.59,
+18448275_3.jpg,12,Financial Assets,Other Non - Current Assets,col3,396.26,396.26,
+18448275_3.jpg,12,Financial Assets,Other Non - Current Assets,col4,332.58,332.58,
+18448275_3.jpg,13,Financial Assets,,col3,33930.99,"33,930.99",
+18448275_3.jpg,13,Financial Assets,,col4,33671.02,33 671.02,
+18448275_3.jpg,15,Financial Assets,Current Assets,col3,335.67,335.67,
+18448275_3.jpg,15,Financial Assets,Current Assets,col4,30724,307 24,
+18448275_3.jpg,17,Financial Assets,Investments,col3,266.64,266.64,c4:52
+18448275_3.jpg,17,Financial Assets,Investments,col4,24540,245 40,c4:52
+18448275_3.jpg,18,Financial Assets,Service Concession Receivable;,col4,75.54,75.54,
+18448275_3.jpg,19,Financial Assets,Bank Balance other than Cash and Cash Equivalents,col3,499.47,499.47,c4:63;slow
+18448275_3.jpg,19,Financial Assets,Bank Balance other than Cash and Cash Equivalents,col4,9178,91 78,c4:63;slow
+18448275_3.jpg,21,Financial Assets,Other Current Assets,col3,905.63,905.63,c4:44;fast
+18448275_3.jpg,21,Financial Assets,Other Current Assets,col4,1040.06,1040.06,c4:44;fast
+18448275_3.jpg,23,Financial Assets,related,col3,1626.83,"1,626.83",c3:59
+18448275_3.jpg,24,Financial Assets,Total Assets,col3,58786.92,"58,786.92",c4:67;fast
+18448275_3.jpg,24,Financial Assets,Total Assets,col4,5743543,57 435 43,c4:67;fast
+18448275_3.jpg,26,Financial Assets,Equity,col3,263.03,263.03,c4:63
+18448275_3.jpg,26,Financial Assets,Equity,col4,26303,263 03,c4:63
+18448275_3.jpg,27,Financial Assets,Other Equily,col3,21721.63,"21,721.63",c4:54
+18448275_3.jpg,27,Financial Assets,Other Equily,col4,2073211,"20,732 11",c4:54
+18448275_3.jpg,28,Financial Assets,Total Equity,col3,2198466,"21,984 66",
+18448275_3.jpg,28,Financial Assets,Total Equity,col4,2099514,20.995.14,
+18448275_3.jpg,31,Financial Liabilities,Sorrowings,col3,4567.16,"4,567.16","c3:55,c4:55;fast;fast"
+18448275_3.jpg,31,Financial Liabilities,Sorrowings,col4,6738.92,6 738.92,"c3:55,c4:55;fast;fast"
+18448275_3.jpg,32,Financial Liabilities,Lease Obligations Financiat,col3,411092,4.110.92,c3:25;fast
+18448275_3.jpg,32,Financial Liabilities,Lease Obligations Financiat,col4,416475,4.164.75,c3:25;fast
+18448275_3.jpg,33,Financial Liabilities,Trade Payables,col3,8.79,8.79,
+18448275_3.jpg,33,Financial Liabilities,Trade Payables,col4,498,498,
+18448275_3.jpg,34,Financial Liabilities,Other Financial Liabilities,col3,539.25,539.25,c3:65
+18448275_3.jpg,34,Financial Liabilities,Other Financial Liabilities,col4,50401,504 01,c3:65
+18448275_3.jpg,35,Financial Liabilities,,col3,364.73,364.73,c4:45;fast
+18448275_3.jpg,35,Financial Liabilities,,col4,38000,380 00,c4:45;fast
+18448275_3.jpg,36,Financial Liabilities,Liabilities (Net) Deterred Tax,col3,2449.88,"2,449.88",c4:59
+18448275_3.jpg,36,Financial Liabilities,Liabilities (Net) Deterred Tax,col4,2522.40,2 522.40,c4:59
+18448275_3.jpg,37,Financial Liabilities,(Other Non-Current Liabilities,col3,1900.21,"1,900.21",
+18448275_3.jpg,37,Financial Liabilities,(Other Non-Current Liabilities,col4,195808,1.958.08,
+18448275_3.jpg,38,Financial Liabilities,Total Non-Curront Liabilities,col3,13940.94,"13,940.94",
+18448275_3.jpg,38,Financial Liabilities,Total Non-Curront Liabilities,col4,1627314,16.273.14,
+18448275_3.jpg,41,Current Liabilities,financial Liabilities,col3,3437.48,"3,437.48",c4:52;fast
+18448275_3.jpg,41,Current Liabilities,financial Liabilities,col4,524854,"5 248,54",c4:52;fast
+18448275_3.jpg,42,Current Liabilities,Financial Lease Obligations,col3,58.68,58.68,c4:6;fast
+18448275_3.jpg,42,Current Liabilities,Financial Lease Obligations,col4,5266,52 66,c4:6;fast
+18448275_3.jpg,43,Current Liabilities,Trade Payables,col3,5295.98,"5,295.98",c4:55;fast
+18448275_3.jpg,43,Current Liabilities,Trade Payables,col4,5562.03,5 562.03,c4:55;fast
+18448275_3.jpg,44,Current Liabilities,Other Financial Liabilities,col3,5724.48,"5,724.48",
+18448275_3.jpg,44,Current Liabilities,Other Financial Liabilities,col4,400461,4.004.61,
+18448275_3.jpg,45,Current Liabilities,,col3,800984,"8,009 84",c3:67
+18448275_3.jpg,45,Current Liabilities,,col4,386284,3.862.84,c3:67
+18448275_3.jpg,46,Current Liabilities,Provisions,col3,34.22,34.22,c4:63;fast
+18448275_3.jpg,46,Current Liabilities,Provisions,col4,25154,251 54,c4:63;fast
+18448275_3.jpg,47,Current Liabilities,(Current Tax Liabilities (Net),col3,300.64,300.64,
+18448275_3.jpg,47,Current Liabilities,(Current Tax Liabilities (Net),col4,480.30,480.30,
+18448275_3.jpg,48,Current Liabilities,Total Current Liabilities,col3,22861.32,"22,861.32",c4:68;fast
+18448275_3.jpg,48,Current Liabilities,Total Current Liabilities,col4,19462.52,19 462.52,c4:68;fast
+18448275_3.jpg,49,Current Liabilities,Liabilities of Discontinued Operations,col4,70463,704 63,c4:65;fast
+18448275_3.jpg,50,Current Liabilities,Total Equity and Liabilities,col3,58786.92,"58,786.92",
+18448275_3.jpg,50,Current Liabilities,Total Equity and Liabilities,col4,5743543,57 435 43,
+18448275_9.jpg,3,Non-current assets,Goodwill on Consolidation,2018-03-31,175,175,
+18448275_9.jpg,5,Non-current assets,Financial assets,col2,1000000,"1,000,000",c2:5;fast
+18448275_9.jpg,5,Non-current assets,Financial assets,2018-03-31,5314955,53.149.55,c2:5;fast
+18448275_9.jpg,5,Non-current assets,Financial assets,2018-03-31,52565.24,"52,565.24",c2:5;fast
+18448275_9.jpg,8,Financial assets,Concession financial receivable,2018-03-31,75.54,75.54,c3:21;fast
+18448275_9.jpg,9,Financial assets,,2018-03-31,2268990,22.689.90,
+18448275_9.jpg,13,Non-current liabilities,Financial Liabilities,2018-03-31,29380.02,"29,380.02",
+18448275_9.jpg,16,Current liabilities,Financial Liabilities,2018-03-31,4312936,43.129.36,
+18448275_9.jpg,16,Current liabilities,Financial Liabilities,2018-03-31,40306.02,40 306.02,
+18448274_5.jpg,2,,31-Mar-18,col4,31,31,"c4:45,c5:13,c7:27;fast;fast;fast"
+18448274_5.jpg,2,,31-Mar-18,col5,17,17,"c4:45,c5:13,c7:27;fast;fast;fast"
+18448274_5.jpg,2,,31-Mar-18,col7,17,17,"c4:45,c5:13,c7:27;fast;fast;fast"
+18448274_5.jpg,5,ASSETS,Non-Current Assets,col5,1000000.00,"1,000,000.00","c3:69,c5:17,c7:28;fast;fast"
+18448274_5.jpg,6,ASSETS,"Plant and Property, Equipment, net",col4,33096.79,"33,096.79","c2:69,c5:68;slow"
+18448274_5.jpg,6,ASSETS,"Plant and Property, Equipment, net",col5,20535.59,"20,535.59","c2:69,c5:68;slow"
+18448274_5.jpg,6,ASSETS,"Plant and Property, Equipment, net",col6,82249.03,"82,249.03","c2:69,c5:68;slow"
+18448274_5.jpg,6,ASSETS,"Plant and Property, Equipment, net",col7,71612.33,"71,612.33","c2:69,c5:68;slow"
+18448274_5.jpg,7,ASSETS,lb) Capital Work in Progress,col4,8655,8655,
+18448274_5.jpg,7,ASSETS,lb) Capital Work in Progress,col5,13.28,13.28,
+18448274_5.jpg,7,ASSETS,lb) Capital Work in Progress,col6,334.25,334.25,
+18448274_5.jpg,7,ASSETS,lb) Capital Work in Progress,col7,23.63,23.63,
+18448274_5.jpg,8,ASSETS,on Goodwill Consolidation,col6,39455.47,"39,455.47","c2:30,c4:55,c5:58;slow;fast;slow"
+18448274_5.jpg,8,ASSETS,on Goodwill Consolidation,col7,13272.76,"13,272.76","c2:30,c4:55,c5:58;slow;fast;slow"
+18448274_5.jpg,9,ASSETS,Other Intangible Assets,col4,368.61,368.61,
+18448274_5.jpg,9,ASSETS,Other Intangible Assets,col5,31.43,31.43,
+18448274_5.jpg,9,ASSETS,Other Intangible Assets,col6,655.86,655.86,
+18448274_5.jpg,10,ASSETS,"too blurry to transcribe any characters. The text is not legible, and it appears to be a scanned financial table with a lot of noise and distortion. Therefore, I cannot provide an accurate transcription of the characters",col4,75.43,75.43,c2:48;fast
+18448274_5.jpg,10,ASSETS,"too blurry to transcribe any characters. The text is not legible, and it appears to be a scanned financial table with a lot of noise and distortion. Therefore, I cannot provide an accurate transcription of the characters",col6,75.43,75.43,c2:48;fast
+18448274_5.jpg,10,ASSETS,"too blurry to transcribe any characters. The text is not legible, and it appears to be a scanned financial table with a lot of noise and distortion. Therefore, I cannot provide an accurate transcription of the characters",col7,28.48,28.48,c2:48;fast
+18448274_5.jpg,12,f) Financial Assets,Investments,col4,62147.46,"62,147.46",
+18448274_5.jpg,12,f) Financial Assets,Investments,col5,32721.44,"32,721.44",
+18448274_5.jpg,12,f) Financial Assets,Investments,col6,541.24,541.24,
+18448274_5.jpg,12,f) Financial Assets,Investments,col7,491.15,491.15,
+18448274_5.jpg,13,f) Financial Assets,ji) Other Financial Assets,col4,123463,"1,234 63","c4:50,c5:65,c7:55;fast"
+18448274_5.jpg,13,f) Financial Assets,ji) Other Financial Assets,col5,1377.60,"1,377.60","c4:50,c5:65,c7:55;fast"
+18448274_5.jpg,13,f) Financial Assets,ji) Other Financial Assets,col6,2029.72,"2,029.72","c4:50,c5:65,c7:55;fast"
+18448274_5.jpg,13,f) Financial Assets,ji) Other Financial Assets,col7,2244.18,"2,244.18","c4:50,c5:65,c7:55;fast"
+18448274_5.jpg,14,f) Financial Assets,tax Assets g) Deferred (net),col5,918.00,918.00,c4:13;slow
+18448274_5.jpg,14,f) Financial Assets,tax Assets g) Deferred (net),col6,1560.92,"1,560.92",c4:13;slow
+18448274_5.jpg,14,f) Financial Assets,tax Assets g) Deferred (net),col7,3507.84,"3,507.84",c4:13;slow
+18448274_5.jpg,15,f) Financial Assets,h) Other Non Current Assets,col4,373.39,373.39,
+18448274_5.jpg,15,f) Financial Assets,h) Other Non Current Assets,col5,629.52,629.52,
+18448274_5.jpg,15,f) Financial Assets,h) Other Non Current Assets,col6,467.93,467.93,
+18448274_5.jpg,15,f) Financial Assets,h) Other Non Current Assets,col7,506.69,506.69,
+18448274_5.jpg,16,f) Financial Assets,Non Current [Total Assets,col5,56226.86,"56,226.86",
+18448274_5.jpg,16,f) Financial Assets,Non Current [Total Assets,col6,127369.85,"127,369.85",
+18448274_5.jpg,16,f) Financial Assets,Non Current [Total Assets,col7,92012.26,"92,012.26",
+18448274_5.jpg,18,Current Assets,Inventories,col2,1000,"1,000","c2:43,c6:69;fast"
+18448274_5.jpg,18,Current Assets,Inventories,col4,1276.76,"1,276.76","c2:43,c6:69;fast"
+18448274_5.jpg,18,Current Assets,Inventories,col5,1178.25,"1,178.25","c2:43,c6:69;fast"
+18448274_5.jpg,18,Current Assets,Inventories,col6,7049.44,"7,049.44","c2:43,c6:69;fast"
+18448274_5.jpg,18,Current Assets,Inventories,col7,6952.54,"6,952.54","c2:43,c6:69;fast"
+18448274_5.jpg,20,Financial Assets,Investments,col2,1000,"1,000","c2:42,c6:58;fast"
+18448274_5.jpg,20,Financial Assets,Investments,col4,36466.51,"36,466.51","c2:42,c6:58;fast"
+18448274_5.jpg,20,Financial Assets,Investments,col5,9315.05,"9,315.05","c2:42,c6:58;fast"
+18448274_5.jpg,20,Financial Assets,Investments,col6,41660.00,"41,660.00","c2:42,c6:58;fast"
+18448274_5.jpg,21,Financial Assets,Trade Receivables,col4,750.09,750.09,"c4:69,c7:60"
+18448274_5.jpg,21,Financial Assets,Trade Receivables,col5,356.53,356.53,"c4:69,c7:60"
+18448274_5.jpg,21,Financial Assets,Trade Receivables,col6,829.25,829.25,"c4:69,c7:60"
+18448274_5.jpg,21,Financial Assets,Trade Receivables,col7,425.35,425.35,"c4:69,c7:60"
+18448274_5.jpg,22,Financial Assets,Cash and Cash Equivalents,col4,6240.83,"6,240.83",
+18448274_5.jpg,22,Financial Assets,Cash and Cash Equivalents,col5,2035.63,"2,035.63",
+18448274_5.jpg,22,Financial Assets,Cash and Cash Equivalents,col6,12295.46,"12,295.46",
+18448274_5.jpg,22,Financial Assets,Cash and Cash Equivalents,col7,3088.76,"3,088.76",
+18448274_5.jpg,23,Financial Assets,liv) Bank Balances other than (in) above,col4,52.78,52.78,"c5:28,c7:32;fast;fast"
+18448274_5.jpg,23,Financial Assets,liv) Bank Balances other than (in) above,col5,49.86,49.86,"c5:28,c7:32;fast;fast"
+18448274_5.jpg,23,Financial Assets,liv) Bank Balances other than (in) above,col6,52.78,52.78,"c5:28,c7:32;fast;fast"
+18448274_5.jpg,23,Financial Assets,liv) Bank Balances other than (in) above,col7,49.86,49.86,"c5:28,c7:32;fast;fast"
+18448274_5.jpg,24,Financial Assets,v)Loans,col4,45682.25,"45,682.25",
+18448274_5.jpg,24,Financial Assets,v)Loans,col5,32269.64,"32,269.64",
+18448274_5.jpg,24,Financial Assets,v)Loans,col6,3839.64,"3,839.64",
+18448274_5.jpg,25,Financial Assets,vi) Other Financial Assets,col4,597.27,597.27,"c4:54,c5:53,c6:62,c7:36;fast;fast"
+18448274_5.jpg,25,Financial Assets,vi) Other Financial Assets,col5,1156.67,"1,156.67","c4:54,c5:53,c6:62,c7:36;fast;fast"
+18448274_5.jpg,25,Financial Assets,vi) Other Financial Assets,col6,949.40,949.40,"c4:54,c5:53,c6:62,c7:36;fast;fast"
+18448274_5.jpg,25,Financial Assets,vi) Other Financial Assets,col7,1535.14,"1,535.14","c4:54,c5:53,c6:62,c7:36;fast;fast"
+18448274_5.jpg,26,Financial Assets,"a single cell from a scanned financial table, but the text is too blurry to read. The characters are not visible, and the image appears to be a low-resolution scan of a document. Therefore, I cannot transcribe any",col4,283.93,283.93,"c2:36,c4:59,c6:68;fast"
+18448274_5.jpg,26,Financial Assets,"a single cell from a scanned financial table, but the text is too blurry to read. The characters are not visible, and the image appears to be a low-resolution scan of a document. Therefore, I cannot transcribe any",col5,295.32,295.32,"c2:36,c4:59,c6:68;fast"
+18448274_5.jpg,26,Financial Assets,"a single cell from a scanned financial table, but the text is too blurry to read. The characters are not visible, and the image appears to be a low-resolution scan of a document. Therefore, I cannot transcribe any",col6,465.22,465.22,"c2:36,c4:59,c6:68;fast"
+18448274_5.jpg,26,Financial Assets,"a single cell from a scanned financial table, but the text is too blurry to read. The characters are not visible, and the image appears to be a low-resolution scan of a document. Therefore, I cannot transcribe any",col7,509.87,509.87,"c2:36,c4:59,c6:68;fast"
+18448274_5.jpg,27,Financial Assets,d) Other Current Assets,col4,1363.65,"1,363.65","c6:43,c7:55"
+18448274_5.jpg,27,Financial Assets,d) Other Current Assets,col5,2963.42,"2,963.42","c6:43,c7:55"
+18448274_5.jpg,27,Financial Assets,d) Other Current Assets,col6,3852.62,"3,852.62","c6:43,c7:55"
+18448274_5.jpg,27,Financial Assets,d) Other Current Assets,col7,7250.89,"7,250.89","c6:43,c7:55"
+18448274_5.jpg,28,Financial Assets,Total Current Assets,col4,92714.07,"92,714.07",
+18448274_5.jpg,28,Financial Assets,Total Current Assets,col5,49620.37,"49,620.37",
+18448274_5.jpg,28,Financial Assets,Total Current Assets,col6,70993.81,"70,993.81",
+18448274_5.jpg,28,Financial Assets,Total Current Assets,col7,33714.37,"33,714.37",
+18448274_5.jpg,29,Financial Assets,Total Assets,col4,190096.93,"190,096.93",c4:69
+18448274_5.jpg,29,Financial Assets,Total Assets,col5,105847.23,"105,847.23",c4:69
+18448274_5.jpg,29,Financial Assets,Total Assets,col6,198363.66,"198,363.66",c4:69
+18448274_5.jpg,29,Financial Assets,Total Assets,col7,125726.63,"125,726.63",c4:69
+18448274_5.jpg,32,EQUITY AND LIABILITIES,Share Capital lla) Equity,col4,2675.90,"2,675.90",
+18448274_5.jpg,32,EQUITY AND LIABILITIES,Share Capital lla) Equity,col5,2316.24,"2,316.24",
+18448274_5.jpg,32,EQUITY AND LIABILITIES,Share Capital lla) Equity,col6,2675.90,"2,675.90",
+18448274_5.jpg,32,EQUITY AND LIABILITIES,Share Capital lla) Equity,col7,2316.24,"2,316.24",
+18448274_5.jpg,33,EQUITY AND LIABILITIES,b) Other Equity,col4,164447.83,"164,447.83","c4:69,c5:69"
+18448274_5.jpg,33,EQUITY AND LIABILITIES,b) Other Equity,col5,93096.21,"93,096.21","c4:69,c5:69"
+18448274_5.jpg,33,EQUITY AND LIABILITIES,b) Other Equity,col6,165598.09,"165,598.09","c4:69,c5:69"
+18448274_5.jpg,33,EQUITY AND LIABILITIES,b) Other Equity,col7,89703.56,"89,703.56","c4:69,c5:69"
+18448274_5.jpg,34,EQUITY AND LIABILITIES,Equity attributable to shareholders of the,col5,95412.45,"95,412.45",
+18448274_5.jpg,35,EQUITY AND LIABILITIES,Non - Controlling Interest,col6,1409.44,"1,409.44",c4:32;fast
+18448274_5.jpg,35,EQUITY AND LIABILITIES,Non - Controlling Interest,col7,1601.67,"1,601.67",c4:32;fast
+18448274_5.jpg,36,EQUITY AND LIABILITIES,Total Equity,col4,167123.73,"167,123.73",
+18448274_5.jpg,36,EQUITY AND LIABILITIES,Total Equity,col5,95412.45,"95,412.45",
+18448274_5.jpg,36,EQUITY AND LIABILITIES,Total Equity,col6,169683.43,"169,683.43",
+18448274_5.jpg,36,EQUITY AND LIABILITIES,Total Equity,col7,9362147,93.621.47,
+18448274_5.jpg,38,a) Financial Liabilities,i) Borrowings,col4,97.28,97.28,
+18448274_5.jpg,38,a) Financial Liabilities,i) Borrowings,col5,2408.19,"2,408.19",
+18448274_5.jpg,38,a) Financial Liabilities,i) Borrowings,col6,125.65,125.65,
+18448274_5.jpg,38,a) Financial Liabilities,i) Borrowings,col7,2422.73,"2,422.73",
+18448274_5.jpg,39,a) Financial Liabilities,Other Financial Liabilities,col6,853.50,853.50,"c3:69,c5:48;fast"
+18448274_5.jpg,39,a) Financial Liabilities,Other Financial Liabilities,col7,750.00,750.00,"c3:69,c5:48;fast"
+18448274_5.jpg,40,a) Financial Liabilities,b) Provisions,col4,142.62,142.62,
+18448274_5.jpg,40,a) Financial Liabilities,b) Provisions,col5,222.13,222.13,
+18448274_5.jpg,40,a) Financial Liabilities,b) Provisions,col6,183.55,183.55,
+18448274_5.jpg,40,a) Financial Liabilities,b) Provisions,col7,350.31,350.31,
+18448274_5.jpg,41,a) Financial Liabilities,c) Deferred Tax Liabilities,col2,1000,"1,000","c2:32,c5:48;fast;fast"
+18448274_5.jpg,41,a) Financial Liabilities,c) Deferred Tax Liabilities,col4,1061.58,"1,061.58","c2:32,c5:48;fast;fast"
+18448274_5.jpg,42,a) Financial Liabilities,Total Non Current Liabilities,col4,1301.48,"1,301.48",c5:65
+18448274_5.jpg,42,a) Financial Liabilities,Total Non Current Liabilities,col5,2630.32,"2,630.32",c5:65
+18448274_5.jpg,42,a) Financial Liabilities,Total Non Current Liabilities,col6,1162.70,"1,162.70",c5:65
+18448274_5.jpg,42,a) Financial Liabilities,Total Non Current Liabilities,col7,3523.04,"3,523.04",c5:65
+18448274_5.jpg,43,a) Financial Liabilities,i) Borrowings,col4,58.91,58.91,
+18448274_5.jpg,43,a) Financial Liabilities,i) Borrowings,col5,1988.34,"1,988.34",
+18448274_5.jpg,43,a) Financial Liabilities,i) Borrowings,col6,18.60,18.60,
+18448274_5.jpg,43,a) Financial Liabilities,i) Borrowings,col7,3678.67,"3,678.67",
+18448274_5.jpg,44,a) Financial Liabilities,ii) Trade Payables,col2,1000,"1,000",c2:32;fast
+18448274_5.jpg,44,a) Financial Liabilities,ii) Trade Payables,col4,933.91,933.91,c2:32;fast
+18448274_5.jpg,44,a) Financial Liabilities,ii) Trade Payables,col5,572.90,572.90,c2:32;fast
+18448274_5.jpg,44,a) Financial Liabilities,ii) Trade Payables,col6,1452.89,"1,452.89",c2:32;fast
+18448274_5.jpg,44,a) Financial Liabilities,ii) Trade Payables,col7,1298.77,"1,298.77",c2:32;fast
+18448274_5.jpg,45,a) Financial Liabilities,iit) Other Financial Liabilities,col4,18554.81,"18,554.81",
+18448274_5.jpg,45,a) Financial Liabilities,iit) Other Financial Liabilities,col5,2911.43,"2,911.43",
+18448274_5.jpg,45,a) Financial Liabilities,iit) Other Financial Liabilities,col6,22270.16,"22,270.16",
+18448274_5.jpg,45,a) Financial Liabilities,iit) Other Financial Liabilities,col7,19633.65,"19,633.65",
+18448274_5.jpg,46,a) Financial Liabilities,c) Provisions,col4,670.07,670.07,
+18448274_5.jpg,46,a) Financial Liabilities,c) Provisions,col5,561.48,561.48,
+18448274_5.jpg,46,a) Financial Liabilities,c) Provisions,col6,755.72,755.72,
+18448274_5.jpg,46,a) Financial Liabilities,c) Provisions,col7,597.78,597.78,
+18448274_5.jpg,47,a) Financial Liabilities,Total Current Liabilities,col5,7804.46,"7,804.46",
+18448274_5.jpg,47,a) Financial Liabilities,Total Current Liabilities,col6,27517.53,"27,517.53",
+18448274_5.jpg,47,a) Financial Liabilities,Total Current Liabilities,col7,28582.12,"28,582.12",
+18448274_5.jpg,48,a) Financial Liabilities,Total Equity and Liabilities,col4,190096.93,"190,096.93",c3:68
+18448274_5.jpg,48,a) Financial Liabilities,Total Equity and Liabilities,col5,105847.23,"105,847.23",c3:68
+18448274_5.jpg,48,a) Financial Liabilities,Total Equity and Liabilities,col6,198363.66,"198,363.66",c3:68
+18448274_5.jpg,48,a) Financial Liabilities,Total Equity and Liabilities,col7,125726.63,"125,726.63",c3:68
+18456477_2.jpg,6,,(a),2018,1293.32,"1,293.32",
+18456477_2.jpg,6,,(a),2017,1315.70,"1,315.70",
+18456477_2.jpg,6,,(a),2018,1293.50,"1,293.50",
+18456477_2.jpg,6,,(a),col7,1315.88,"1,315.88",
+18456477_2.jpg,7,,(b),2018,35.96,35.96,c4:65
+18456477_2.jpg,7,,(b),2017,13.71,13.71,c4:65
+18456477_2.jpg,7,,(b),2018,35.85,35.85,c4:65
+18456477_2.jpg,7,,(b),col7,13.67,13.67,c4:65
+18456477_2.jpg,8,,Goodwill,2018,0.32,0.32,
+18456477_2.jpg,9,,(d),2018,8.36,8.36,c3:69;fast
+18456477_2.jpg,9,,(d),2017,7.92,7.92,c3:69;fast
+18456477_2.jpg,9,,(d),2018,11.08,11.08,c3:69;fast
+18456477_2.jpg,10,,Intangible assets under development,2018,10.62,10.62,c3:69;fast
+18456477_2.jpg,10,,Intangible assets under development,2017,8.25,8.25,c3:69;fast
+18456477_2.jpg,10,,Intangible assets under development,2018,10.62,10.62,c3:69;fast
+18456477_2.jpg,11,,Financial assets,col2,0,0,"c4:9,c5:33,c6:39,c7:39;fast;fast;fast;fast"
+18456477_2.jpg,12,,Investments,2018,287.69,287.69,c4:67
+18456477_2.jpg,12,,Investments,2017,334.06,334.06,c4:67
+18456477_2.jpg,12,,Investments,2018,221.25,221.25,c4:67
+18456477_2.jpg,12,,Investments,col7,388.35,388.35,c4:67
+18456477_2.jpg,13,,(g),2018,0.51,0.51,
+18456477_2.jpg,13,,(g),col7,0.25,0.25,
+18456477_2.jpg,14,,(h),2018,81.49,81.49,
+18456477_2.jpg,14,,(h),2017,66.24,66.24,
+18456477_2.jpg,14,,(h),2018,89.11,89.11,
+18456477_2.jpg,14,,(h),col7,70.25,70.25,
+18456477_2.jpg,15,,assets non-current,2018,1717.44,"1,717.44",c2:20;slow
+18456477_2.jpg,15,,assets non-current,2017,1745.88,"1,745.88",c2:20;slow
+18456477_2.jpg,15,,assets non-current,2018,1662.24,"1,662.24",c2:20;slow
+18456477_2.jpg,15,,assets non-current,col7,1808.31,"1,808.31",c2:20;slow
+18456477_2.jpg,17,Current assets,W,2018,2227.13,"2,227.13","c5:44,c6:46"
+18456477_2.jpg,17,Current assets,W,2017,1724.61,"1,724.61","c5:44,c6:46"
+18456477_2.jpg,17,Current assets,W,2018,2227.13,"2,227.13","c5:44,c6:46"
+18456477_2.jpg,17,Current assets,W,col7,1724.61,"1,724.61","c5:44,c6:46"
+18456477_2.jpg,19,Current assets,Investments,2018,0.14,0.14,c2:26;slow
+18456477_2.jpg,19,Current assets,Investments,2017,0.13,0.13,c2:26;slow
+18456477_2.jpg,19,Current assets,Investments,2018,0.14,0.14,c2:26;slow
+18456477_2.jpg,19,Current assets,Investments,col7,0.13,0.13,c2:26;slow
+18456477_2.jpg,20,Current assets,Trade receivables,2018,1523.13,"1,523.13",c6:39
+18456477_2.jpg,20,Current assets,Trade receivables,2017,161849,1.618.49,c6:39
+18456477_2.jpg,20,Current assets,Trade receivables,2018,1523.43,"1,523.43",c6:39
+18456477_2.jpg,20,Current assets,Trade receivables,col7,162167,1.621.67,c6:39
+18456477_2.jpg,21,Current assets,Government subsidies,2018,2626.86,"2,626.86","c2:28,c5:66;slow"
+18456477_2.jpg,21,Current assets,Government subsidies,2017,2557.03,"2,557.03","c2:28,c5:66;slow"
+18456477_2.jpg,21,Current assets,Government subsidies,2018,262686,2.626.86,"c2:28,c5:66;slow"
+18456477_2.jpg,22,Current assets,and Cash cash equivalents,col2,1000.00,"1,000.00",c2:7;fast
+18456477_2.jpg,22,Current assets,and Cash cash equivalents,2018,438.97,438.97,c2:7;fast
+18456477_2.jpg,22,Current assets,and Cash cash equivalents,2017,142.40,142.40,c2:7;fast
+18456477_2.jpg,22,Current assets,and Cash cash equivalents,2018,441.90,441.90,c2:7;fast
+18456477_2.jpg,23,Current assets,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is:",2018,108.90,108.90,"c2:32,c4:69;fast"
+18456477_2.jpg,23,Current assets,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is:",2017,21.12,21.12,"c2:32,c4:69;fast"
+18456477_2.jpg,23,Current assets,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is:",2018,108.90,108.90,"c2:32,c4:69;fast"
+18456477_2.jpg,23,Current assets,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is:",col7,21.12,21.12,"c2:32,c4:69;fast"
+18456477_2.jpg,24,Current assets,(vii) Other financial assets,2018,21.38,21.38,c2:27;slow
+18456477_2.jpg,24,Current assets,(vii) Other financial assets,2017,37.56,37.56,c2:27;slow
+18456477_2.jpg,24,Current assets,(vii) Other financial assets,2018,21.59,21.59,c2:27;slow
+18456477_2.jpg,25,Current assets,(c),2018,706.42,706.42,c5:69
+18456477_2.jpg,25,Current assets,(c),2017,200.66,200.66,c5:69
+18456477_2.jpg,25,Current assets,(c),2018,707.29,707.29,c5:69
+18456477_2.jpg,26,Current assets,Total current assets,2018,8053.03,"8,053.03",c7:68;fast
+18456477_2.jpg,26,Current assets,Total current assets,2017,6817.10,"6,817.10",c7:68;fast
+18456477_2.jpg,26,Current assets,Total current assets,2018,8065.01,"8,065.01",c7:68;fast
+18456477_2.jpg,26,Current assets,Total current assets,col7,6836.69,"6,836.69",c7:68;fast
+18456477_2.jpg,28,Current assets,,2018,9770.47,"9,770.47",
+18456477_2.jpg,28,Current assets,,2017,8562.98,"8,562.98",
+18456477_2.jpg,28,Current assets,,2018,9727.25,"9,727.25",
+18456477_2.jpg,30,Current assets,i ANI) LIABILITIES,2018,29.24,29.24,
+18456477_2.jpg,30,Current assets,i ANI) LIABILITIES,2017,29.17,29.17,
+18456477_2.jpg,30,Current assets,i ANI) LIABILITIES,2018,29.24,29.24,
+18456477_2.jpg,31,Current assets,,2018,314252,3.142.52,
+18456477_2.jpg,31,Current assets,,2017,2782.76,"2,782.76",
+18456477_2.jpg,31,Current assets,,2018,3096.62,"3,096.62",
+18456477_2.jpg,31,Current assets,,col7,2861.60,"2,861.60",
+18456477_2.jpg,32,Current assets,,2018,3171.76,"3,171.76","c2:50,c3:29;slow;slow"
+18456477_2.jpg,32,Current assets,,2017,2811.93,"2,811.93","c2:50,c3:29;slow;slow"
+18456477_2.jpg,32,Current assets,,2018,3125.86,"3,125.86","c2:50,c3:29;slow;slow"
+18456477_2.jpg,34,Current assets,Total equity,2018,3171.76,"3,171.76",
+18456477_2.jpg,34,Current assets,Total equity,2017,2811.93,"2,811.93",
+18456477_2.jpg,34,Current assets,Total equity,2018,3125.86,"3,125.86",
+18456477_2.jpg,37,Financial liabilities,(i) Other financial liabilities,2018,1.28,1.28,
+18456477_2.jpg,37,Financial liabilities,(i) Other financial liabilities,2017,1.23,1.23,
+18456477_2.jpg,37,Financial liabilities,(i) Other financial liabilities,2018,1.28,1.28,
+18456477_2.jpg,37,Financial liabilities,(i) Other financial liabilities,col7,1.23,1.23,
+18456477_2.jpg,38,Financial liabilities,Provisions,2018,14.39,14.39,
+18456477_2.jpg,38,Financial liabilities,Provisions,2017,14.17,14.17,
+18456477_2.jpg,38,Financial liabilities,Provisions,2018,14.39,14.39,
+18456477_2.jpg,38,Financial liabilities,Provisions,col7,14.17,14.17,
+18456477_2.jpg,39,Financial liabilities,Deferred tax liabilities (net),2018,125.62,125.62,
+18456477_2.jpg,39,Financial liabilities,Deferred tax liabilities (net),2017,148.51,148.51,
+18456477_2.jpg,39,Financial liabilities,Deferred tax liabilities (net),2018,128.97,128.97,
+18456477_2.jpg,40,Financial liabilities,(d),2018,9.75,9.75,
+18456477_2.jpg,40,Financial liabilities,(d),2017,10.23,10.23,
+18456477_2.jpg,40,Financial liabilities,(d),2018,9.75,9.75,
+18456477_2.jpg,40,Financial liabilities,(d),col7,10.23,10.23,
+18456477_2.jpg,42,Current liabilities,(i) Borrowings,2018,273081,2.730.81,"c5:66,c6:66;fast;fast"
+18456477_2.jpg,42,Current liabilities,(i) Borrowings,2017,2230.56,"2,230.56","c5:66,c6:66;fast;fast"
+18456477_2.jpg,42,Current liabilities,(i) Borrowings,2018,2728.44,"2,728.44","c5:66,c6:66;fast;fast"
+18456477_2.jpg,42,Current liabilities,(i) Borrowings,col7,2228.38,"2,228.38","c5:66,c6:66;fast;fast"
+18456477_2.jpg,43,Current liabilities,Trade payables,2018,3358.70,"3,358.70",c2:38;slow
+18456477_2.jpg,43,Current liabilities,Trade payables,2017,293165,2.931.65,c2:38;slow
+18456477_2.jpg,43,Current liabilities,Trade payables,2018,3358.95,"3,358.95",c2:38;slow
+18456477_2.jpg,43,Current liabilities,Trade payables,col7,2934.54,"2,934.54",c2:38;slow
+18456477_2.jpg,44,Current liabilities,(iii) Other financial liabilities,2018,243.30,243.30,c2:45;slow
+18456477_2.jpg,44,Current liabilities,(iii) Other financial liabilities,2017,312.26,312.26,c2:45;slow
+18456477_2.jpg,44,Current liabilities,(iii) Other financial liabilities,2018,243.31,243.31,c2:45;slow
+18456477_2.jpg,44,Current liabilities,(iii) Other financial liabilities,col7,312.23,312.23,c2:45;slow
+18456477_2.jpg,45,Current liabilities,,2018,9.06,9.06,
+18456477_2.jpg,45,Current liabilities,,2017,14.74,14.74,
+18456477_2.jpg,45,Current liabilities,,2018,9.06,9.06,
+18456477_2.jpg,46,Current liabilities,to,2018,21.95,21.95,
+18456477_2.jpg,46,Current liabilities,to,2017,16.39,16.39,
+18456477_2.jpg,46,Current liabilities,to,2018,21.95,21.95,
+18456477_2.jpg,47,Current liabilities,(d),2018,83.85,83.85,
+18456477_2.jpg,47,Current liabilities,(d),2017,71.31,71.31,
+18456477_2.jpg,47,Current liabilities,(d),2018,85.29,85.29,
+18456477_2.jpg,48,Current liabilities,Total current liabilities,2018,6447.67,"6,447.67",
+18456477_2.jpg,48,Current liabilities,Total current liabilities,2017,5576.91,"5,576.91",
+18456477_2.jpg,48,Current liabilities,Total current liabilities,2018,6447.00,"6,447.00",
+18456477_2.jpg,49,Current liabilities,Total liabilities,2018,6598.71,"6,598.71",c5:36;fast
+18456477_2.jpg,49,Current liabilities,Total liabilities,2017,5751.05,"5,751.05",c5:36;fast
+18456477_2.jpg,49,Current liabilities,Total liabilities,2018,6601.39,"6,601.39",c5:36;fast
+18456477_2.jpg,50,Current liabilities,Total Equity and Liabilities -,2018,9770.47,"9,770.47",
+18456477_2.jpg,50,Current liabilities,Total Equity and Liabilities -,2017,8562.98,"8,562.98",
+18456477_2.jpg,50,Current liabilities,Total Equity and Liabilities -,2018,9727.25,"9,727.25",
+18456477_2.jpg,50,Current liabilities,Total Equity and Liabilities -,col7,8645.00,"8,645.00",
+18320959_3.jpg,6,Non-Current Assets,"(a) Property, Plant and Equipment",standalone:2017,10723.96,"10,723.96","c3:65,c4:60,c6:49;fast"
+18320959_3.jpg,6,Non-Current Assets,"(a) Property, Plant and Equipment",standalone:2018,9281.23,"9,281.23","c3:65,c4:60,c6:49;fast"
+18320959_3.jpg,6,Non-Current Assets,"(a) Property, Plant and Equipment",standalone:2017,10723.96,"10,723.96","c3:65,c4:60,c6:49;fast"
+18320959_3.jpg,6,Non-Current Assets,"(a) Property, Plant and Equipment",col7,9281.23,"9,281.23","c3:65,c4:60,c6:49;fast"
+18320959_3.jpg,7,Non-Current Assets,Capital work in progress,standalone:2017,607.46,607.46,c5:54;slow
+18320959_3.jpg,7,Non-Current Assets,Capital work in progress,standalone:2017,607.46,607.46,c5:54;slow
+18320959_3.jpg,8,Non-Current Assets,Intangible assets,standalone:2018,18.71,18.71,
+18320959_3.jpg,8,Non-Current Assets,Intangible assets,standalone:2017,17.44,17.44,
+18320959_3.jpg,8,Non-Current Assets,Intangible assets,col7,18.71,18.71,
+18320959_3.jpg,10,"a single cell from a scanned financial table, but the text is too blurry to read. Therefore, I cannot transcribe any characters",(i) Non-current investments,standalone:2018,150.00,150.00,c7:68
+18320959_3.jpg,10,"a single cell from a scanned financial table, but the text is too blurry to read. Therefore, I cannot transcribe any characters",(i) Non-current investments,standalone:2017,63.42,63.42,c7:68
+18320959_3.jpg,10,"a single cell from a scanned financial table, but the text is too blurry to read. Therefore, I cannot transcribe any characters",(i) Non-current investments,col7,24.69,24.69,c7:68
+18320959_3.jpg,12,"a single cell from a scanned financial table, but the text is too blurry to read. Therefore, I cannot transcribe any characters",Gii) Other financial assets,standalone:2018,130.62,130.62,
+18320959_3.jpg,12,"a single cell from a scanned financial table, but the text is too blurry to read. Therefore, I cannot transcribe any characters",Gii) Other financial assets,standalone:2017,197.66,197.66,
+18320959_3.jpg,12,"a single cell from a scanned financial table, but the text is too blurry to read. Therefore, I cannot transcribe any characters",Gii) Other financial assets,col7,130.62,130.62,
+18320959_3.jpg,14,"a single cell from a scanned financial table, but the text is too blurry to read. Therefore, I cannot transcribe any characters",(e) Other non-current assets,standalone:2017,1.00,1.00,c4:12;fast
+18320959_3.jpg,17,Current Assets,Inventories,2018-03,1000,"1,000",c2:21;fast
+18320959_3.jpg,17,Current Assets,Inventories,standalone:2017,8002.02,"8,002.02",c2:21;fast
+18320959_3.jpg,17,Current Assets,Inventories,standalone:2018,13925.10,"13,925.10",c2:21;fast
+18320959_3.jpg,17,Current Assets,Inventories,standalone:2017,8002.02,"8,002.02",c2:21;fast
+18320959_3.jpg,17,Current Assets,Inventories,col7,13925.10,"13,925.10",c2:21;fast
+18320959_3.jpg,19,Current Assets,Receivables Trade,standalone:2017,18541.75,"18,541.75",c4:65
+18320959_3.jpg,19,Current Assets,Receivables Trade,standalone:2018,13671.01,"13,671.01",c4:65
+18320959_3.jpg,19,Current Assets,Receivables Trade,standalone:2017,18541.75,"18,541.75",c4:65
+18320959_3.jpg,19,Current Assets,Receivables Trade,col7,13671.01,"13,671.01",c4:65
+18320959_3.jpg,20,Current Assets,(ii) Cash and cash equivalents,standalone:2017,2883.82,"2,883.82","c2:49,c3:67,c4:45;slow;fast"
+18320959_3.jpg,20,Current Assets,(ii) Cash and cash equivalents,standalone:2018,177.11,177.11,"c2:49,c3:67,c4:45;slow;fast"
+18320959_3.jpg,20,Current Assets,(ii) Cash and cash equivalents,standalone:2017,2883.82,"2,883.82","c2:49,c3:67,c4:45;slow;fast"
+18320959_3.jpg,20,Current Assets,(ii) Cash and cash equivalents,col7,177.11,177.11,"c2:49,c3:67,c4:45;slow;fast"
+18320959_3.jpg,21,Current Assets,other than Bank balances above (i),2018-03,1000,"1,000",c2:39;fast
+18320959_3.jpg,21,Current Assets,other than Bank balances above (i),standalone:2017,357.08,357.08,c2:39;fast
+18320959_3.jpg,21,Current Assets,other than Bank balances above (i),standalone:2018,1538.45,"1,538.45",c2:39;fast
+18320959_3.jpg,21,Current Assets,other than Bank balances above (i),standalone:2017,357.08,357.08,c2:39;fast
+18320959_3.jpg,21,Current Assets,other than Bank balances above (i),col7,1538.45,"1,538.45",c2:39;fast
+18320959_3.jpg,22,Current Assets,,standalone:2017,3.12,3.12,
+18320959_3.jpg,22,Current Assets,,standalone:2018,1.79,1.79,
+18320959_3.jpg,22,Current Assets,,standalone:2017,3.12,3.12,
+18320959_3.jpg,22,Current Assets,,col7,1.79,1.79,
+18320959_3.jpg,23,Current Assets,(v) Other Financial assets,standalone:2017,220.19,220.19,c3:61;fast
+18320959_3.jpg,23,Current Assets,(v) Other Financial assets,standalone:2018,1035.36,"1,035.36",c3:61;fast
+18320959_3.jpg,23,Current Assets,(v) Other Financial assets,standalone:2017,220.19,220.19,c3:61;fast
+18320959_3.jpg,23,Current Assets,(v) Other Financial assets,col7,1035.36,"1,035.36",c3:61;fast
+18320959_3.jpg,24,Current Assets,(c) Other current assets,standalone:2017,684.59,684.59,
+18320959_3.jpg,24,Current Assets,(c) Other current assets,standalone:2018,2169.81,"2,169.81",
+18320959_3.jpg,24,Current Assets,(c) Other current assets,standalone:2017,684.59,684.59,
+18320959_3.jpg,24,Current Assets,(c) Other current assets,col7,2169.81,"2,169.81",
+18320959_3.jpg,26,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",Current Assets (B),standalone:2017,30692.57,"30,692.57","c4:65,c7:66"
+18320959_3.jpg,26,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",Current Assets (B),standalone:2018,32518.63,"32,518.63","c4:65,c7:66"
+18320959_3.jpg,26,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",Current Assets (B),standalone:2017,30692.57,"30,692.57","c4:65,c7:66"
+18320959_3.jpg,26,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",Current Assets (B),col7,32518.63,"32,518.63","c4:65,c7:66"
+18320959_3.jpg,27,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",Total Assets (A)+ (B),standalone:2017,42389.09,"42,389.09",
+18320959_3.jpg,27,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",Total Assets (A)+ (B),standalone:2018,42099.19,"42,099.19",
+18320959_3.jpg,27,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",Total Assets (A)+ (B),standalone:2017,42302.51,"42,302.51",
+18320959_3.jpg,27,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",Total Assets (A)+ (B),col7,41973.88,"41,973.88",
+18320959_3.jpg,31,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",(a) Equity share capital,standalone:2018,1659.06,"1,659.06","c5:60,c6:64,c7:45;fast;fast"
+18320959_3.jpg,31,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",(a) Equity share capital,standalone:2017,1659.06,"1,659.06","c5:60,c6:64,c7:45;fast;fast"
+18320959_3.jpg,31,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY",(a) Equity share capital,col7,1659.06,"1,659.06","c5:60,c6:64,c7:45;fast;fast"
+18320959_3.jpg,32,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY","a single cell from a scanned financial table, but the text is too blurry to read. The cell appears to be empty, with no visible characters or numbers. Therefore, the transcription of this cell is EMPTY",standalone:2017,24154.09,"24,154.09","c2:13,c5:16,c6:61;fast"
+18320959_3.jpg,32,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY","a single cell from a scanned financial table, but the text is too blurry to read. The cell appears to be empty, with no visible characters or numbers. Therefore, the transcription of this cell is EMPTY",standalone:2018,14611.93,"14,611.93","c2:13,c5:16,c6:61;fast"
+18320959_3.jpg,32,"a single cell from a scanned financial table. The cell is empty, with no visible characters or text. Therefore, the transcription of this cell is EMPTY","a single cell from a scanned financial table, but the text is too blurry to read. The cell appears to be empty, with no visible characters or numbers. Therefore, the transcription of this cell is EMPTY",standalone:2017,24067.51,"24,067.51","c2:13,c5:16,c6:61;fast"
+18320959_3.jpg,34,"a single cell from a scanned financial table, but it is empty and does not contain any visible characters. Therefore, the transcription of the image is EMPTY",Total Equity (A),standalone:2018,16270.99,"16,270.99",
+18320959_3.jpg,34,"a single cell from a scanned financial table, but it is empty and does not contain any visible characters. Therefore, the transcription of the image is EMPTY",Total Equity (A),standalone:2017,25726.57,"25,726.57",
+18320959_3.jpg,34,"a single cell from a scanned financial table, but it is empty and does not contain any visible characters. Therefore, the transcription of the image is EMPTY",Total Equity (A),col7,16145.67,"16,145.67",
+18320959_3.jpg,38,Non-Current Liabilities =,(ii) Other Non Current Financial Liability,standalone:2017,0.30,0.30,
+18320959_3.jpg,38,Non-Current Liabilities =,(ii) Other Non Current Financial Liability,standalone:2018,0.30,0.30,
+18320959_3.jpg,38,Non-Current Liabilities =,(ii) Other Non Current Financial Liability,standalone:2017,0.30,0.30,
+18320959_3.jpg,38,Non-Current Liabilities =,(ii) Other Non Current Financial Liability,col7,0.30,0.30,
+18320959_3.jpg,39,Non-Current Liabilities =,(bj Long term provisions,standalone:2018,401.26,401.26,c3:67;fast
+18320959_3.jpg,39,Non-Current Liabilities =,(bj Long term provisions,standalone:2017,449.43,449.43,c3:67;fast
+18320959_3.jpg,39,Non-Current Liabilities =,(bj Long term provisions,col7,401.26,401.26,c3:67;fast
+18320959_3.jpg,40,Non-Current Liabilities =,Deferred liabilities (Net) tax,standalone:2017,1061.51,"1,061.51","c2:51,c5:65;slow"
+18320959_3.jpg,40,Non-Current Liabilities =,Deferred liabilities (Net) tax,standalone:2018,399.63,399.63,"c2:51,c5:65;slow"
+18320959_3.jpg,40,Non-Current Liabilities =,Deferred liabilities (Net) tax,standalone:2017,1061.51,"1,061.51","c2:51,c5:65;slow"
+18320959_3.jpg,40,Non-Current Liabilities =,Deferred liabilities (Net) tax,col7,399.63,399.63,"c2:51,c5:65;slow"
+18320959_3.jpg,42,Non-Current Liabilities =,Total Non-Current Liabilities (B),standalone:2017,1511.24,"1,511.24",
+18320959_3.jpg,42,Non-Current Liabilities =,Total Non-Current Liabilities (B),standalone:2018,801.19,801.19,
+18320959_3.jpg,42,Non-Current Liabilities =,Total Non-Current Liabilities (B),standalone:2017,1511.24,"1,511.24",
+18320959_3.jpg,42,Non-Current Liabilities =,Total Non-Current Liabilities (B),col7,801.19,801.19,
+18320959_3.jpg,44,Current Liabilities,Financial Liabilties J,2018-03,1000,"1,000",c2:13;fast
+18320959_3.jpg,45,Current Liabilities,Shor term borrowings,standalone:2018,13710.19,"13,710.19","c2:31,c4:39;slow;slow"
+18320959_3.jpg,45,Current Liabilities,Shor term borrowings,col7,13710.19,"13,710.19","c2:31,c4:39;slow;slow"
+18320959_3.jpg,46,Current Liabilities,(ii) Trade payables,standalone:2017,12574.73,"12,574.73",
+18320959_3.jpg,46,Current Liabilities,(ii) Trade payables,standalone:2018,9872.63,"9,872.63",
+18320959_3.jpg,46,Current Liabilities,(ii) Trade payables,standalone:2017,12574.73,"12,574.73",
+18320959_3.jpg,46,Current Liabilities,(ii) Trade payables,col7,9872.63,"9,872.63",
+18320959_3.jpg,47,Current Liabilities,Current Financial liabilities Other,2018-03,1000,"1,000",c2:20;fast
+18320959_3.jpg,47,Current Liabilities,Current Financial liabilities Other,standalone:2018,453.44,453.44,c2:20;fast
+18320959_3.jpg,47,Current Liabilities,Current Financial liabilities Other,standalone:2017,295.21,295.21,c2:20;fast
+18320959_3.jpg,47,Current Liabilities,Current Financial liabilities Other,col7,453.44,453.44,c2:20;fast
+18320959_3.jpg,48,Current Liabilities,(b) Other current liabilities,standalone:2017,793.04,793.04,c2:39;slow
+18320959_3.jpg,48,Current Liabilities,(b) Other current liabilities,standalone:2018,161.10,161.10,c2:39;slow
+18320959_3.jpg,48,Current Liabilities,(b) Other current liabilities,standalone:2017,793.04,793.04,c2:39;slow
+18320959_3.jpg,49,Current Liabilities,@)Short term provisions,standalone:2018,38.26,38.26,
+18320959_3.jpg,49,Current Liabilities,@)Short term provisions,standalone:2017,40.07,40.07,
+18320959_3.jpg,49,Current Liabilities,@)Short term provisions,col7,38.26,38.26,
+18320959_3.jpg,50,Current Liabilities,@ Current liabilities (Net) tax,standalone:2018,791.32,791.32,c2:27;slow
+18320959_3.jpg,50,Current Liabilities,@ Current liabilities (Net) tax,standalone:2017,1361.65,"1,361.65",c2:27;slow
+18320959_3.jpg,52,Current Liabilities,Current Liabilities (C),standalone:2017,15064.70,"15,064.70",c5:67
+18320959_3.jpg,52,Current Liabilities,Current Liabilities (C),standalone:2018,25027.03,"25,027.03",c5:67
+18320959_3.jpg,52,Current Liabilities,Current Liabilities (C),standalone:2017,15064.70,"15,064.70",c5:67
+18320959_3.jpg,52,Current Liabilities,Current Liabilities (C),col7,25027.03,"25,027.03",c5:67
+18320959_3.jpg,53,Current Liabilities,Total Equity ua and Liabilities ore (A)+ (B) +,standalone:2018,42099.19,"42,099.19","c2:50,c5:45;slow;fast"
+18320959_3.jpg,53,Current Liabilities,Total Equity ua and Liabilities ore (A)+ (B) +,standalone:2017,42302.51,"42,302.51","c2:50,c5:45;slow;fast"
+18320959_3.jpg,53,Current Liabilities,Total Equity ua and Liabilities ore (A)+ (B) +,col7,41973.88,"41,973.88","c2:50,c5:45;slow;fast"
